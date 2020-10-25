@@ -35,5 +35,4 @@ public class Tactics {
         int coolTick = coolDown.get(i);
         return new Pair<>(coolTick, tactics.get(i).get());
     }
-
 }

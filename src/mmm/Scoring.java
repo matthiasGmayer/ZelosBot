@@ -33,7 +33,7 @@ public class Scoring {
         }
         int i =tick%keepTicks;
         Scoring.damage.get(tactic)[i]=damage;
-        scores.set(i, scores.get(i)+damage);
+        scores.set(tactic, scores.get(tactic)+damage);
     }
     public static void cost(int tactic, int tick, double cost){
         while(Scoring.cost.size()<=tactic) {
@@ -43,7 +43,7 @@ public class Scoring {
         }
         int i =tick%keepTicks;
         Scoring.cost.get(tactic)[i]=cost;
-        scores.set(i, scores.get(i)-cost);
+        scores.set(tactic, scores.get(tactic)-cost);
     }
     public static int getBestTactic(){
         for (int i = 1; i < scores.size(); i++) {
