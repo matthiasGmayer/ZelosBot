@@ -3,13 +3,13 @@ package mmm;
 public class Enemy {
     private double bearing, heading, velocity, distance;
     Point position, relativePosition;
-    public void update(ScannedRobotEvent e, Point position){
+    public void update(ScannedRobotEvent e, Point position, double robotHeading){
         bearing=e.getBearing();
         heading = e.getHeading();
         velocity = e.getVelocity();
         distance= e.getDistance();
-        relativePosition = Point.fromPolarCoordinates(heading+bearing,distance);
-        position = position.add(relativePosition);
+        relativePosition = Point.fromPolarCoordinates(robotHeading+bearing,distance);
+        this.position = position.add(relativePosition);
     }
 
     public double getBearing() {

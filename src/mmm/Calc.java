@@ -72,4 +72,12 @@ public class Calc {
         }
         return p;
     }
+    public static Point[] getRectangle(double width, double height){
+        Point[] p = new Point[4];
+        p[0]=new Point(0,0);
+        p[1]=new Point(width,0);
+        p[2]=new Point(width,height);
+        p[3]=new Point(0,height);
+        return p;
+    }
 }

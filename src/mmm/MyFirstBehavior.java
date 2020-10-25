@@ -30,7 +30,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		if(e==null){
 			scan.onNoScan();
 		}else{
-			enemy.update(e,position);
+			enemy.update(e,position,getHeading());
 			scan.onScan(enemy,tick);
 			shooting.onScan(enemy,tick);
 		}

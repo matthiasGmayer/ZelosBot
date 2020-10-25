@@ -15,10 +15,7 @@ public class FlyingBullets {
         setVariables();
     }
     public void setVariables() {
-        corners[0]=new Point(0,0);
-        corners[1]=new Point(battleFieldWidth,0);
-        corners[2]=new Point(0,battleFieldHeight);
-        corners[3]=new Point(battleFieldWidth,battleFieldHeight);
+        corners = Calc.getRectangle(battleFieldWidth,battleFieldHeight);
         double maxBulletAmout=(Calc.maxBulletFlyTime(3,new Point(0,0))/gunCoolingRate);
         flyingBullets=new FlyingBullet[(int)Math.ceil(maxBulletAmout)];
     }
@@ -34,9 +31,9 @@ public class FlyingBullets {
             }
         }
     }
-    public void update(Point enemyPosition,double enemyheading,int tick){
+    public void update(Point enemyPosition,double enemyHeading,int tick){
         for (int i = 0; i < flyingBullets.length; i++) {
-            if (!flyingBullets[i].disabled&&flyingBullets[i].score(enemyPosition,enemyheading,tick)){
+            if (flyingBullets[i]!=null&&!flyingBullets[i].disabled&&flyingBullets[i].score(enemyPosition,enemyHeading,tick)){
                 Scoring.damage(id,flyingBullets[i].tick,flyingBullets[i].damage);
             }
         }
@@ -55,8 +52,9 @@ public class FlyingBullets {
             this.damage=damage;
             this.cost=cost;
         }
-        public boolean score(Point enemyposition,double enemyheading,int tick){
-            Point[] corners= Calc.getCorners(enemyheading,enemyposition);
+        public boolean score(Point enemyPosition,double enemyHeading,int tick){
+            System.out.println("score");
+            Point[] corners= Calc.getCorners(enemyHeading,enemyPosition);
             boolean scored=false;
             Point pastPosition=startposition.add(Point.fromPolarCoordinates(heading,velo*(tick-this.tick)));
             Point nowPosition=pastPosition.add(Point.fromPolarCoordinates(heading,velo));
@@ -66,9 +64,10 @@ public class FlyingBullets {
             boolean outOfField=false;
             outOfField=nowPosition.getX()<0;
             outOfField|=nowPosition.getY()<0;
-            outOfField|=nowPosition.getY()>battlefieldheight;
-            outOfField|=nowPosition.getX()>battlefieldwidth;
+            outOfField|=nowPosition.getY()>battleFieldHeight;
+            outOfField|=nowPosition.getX()>battleFieldWidth;
             disabled=outOfField;
+            scored = nowPosition.distance(enemyPosition)<40;
             if (scored)disabled=true;
             return scored;
         }
