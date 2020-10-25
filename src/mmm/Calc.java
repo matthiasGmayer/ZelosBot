@@ -1,4 +1,4 @@
-package Markus;
+package mmm;
 
 public class Calc {
     public static boolean isIntersecting(Point p0, Point p1, Point p2, Point p3){
