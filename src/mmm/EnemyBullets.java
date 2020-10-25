@@ -28,12 +28,12 @@ public class EnemyBullets {
     }
     public void addBullet(int starttick,double bulletVelocity,double power,Point enemyPosition,Point ourPosition,double heading,double ourVelocity) {
         for (int i = 0; i < enemyBullets.length; i++) {
-            if()
+//            if()
         }
     }
     private void update(int tick){
         for (int i = 0; i < enemyBullets.length; i++) {
-            enemyBullets[i]
+//            enemyBullets[i]
         }
     }
     public class EnemyBullet {
@@ -51,7 +51,7 @@ public class EnemyBullets {
             this.ourPositon=ourPosition;
         }
         public EnemyBullet shotByWhichBullet(Point position,double power,int tick){
-
+            return null;
         }
     }
 }
