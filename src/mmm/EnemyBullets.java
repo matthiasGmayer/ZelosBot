@@ -5,6 +5,7 @@ public class EnemyBullets {
     public double battleFieldHeight;
     public static EnemyBullet[] enemyBullets;
     public Point[] corners;
+    public double roboterdurchmesser=Math.sqrt(2*Math.pow(17,2));
     public double gunCoolingRate;
     public EnemyBullets(double gunCoolingRate,double battleFieldHeight,double battleFieldWidth){
         this.battleFieldHeight=battleFieldHeight;
@@ -51,18 +52,30 @@ public class EnemyBullets {
             this.heading=heading;
             this.ourVelocity=ourVelocity;
             this.power=power;
-            this.starttick=starttick+1;
+            this.starttick=starttick;
             this.ourPositon=ourPosition;
         }
-        public EnemyBullet[] shotByWhichBullet(Point position,double power,int tick,double degree){
+        public EnemyBullet shotByWhichBullet(Point position,double power,int tick,double degree){
             int Relevant=0;
             int[] relevantIndex=new int[enemyBullets.length];
             for (int i = 0; i < enemyBullets.length; i++) {
-                if(enemyBullets[0]==null||enemyBullets[0].disabled){
-                    //if(Math.abs())
+                if(enemyBullets[i]!=null&&enemyBullets[i].disabled){
+                    Point attackPosition=enemyBullets[i].enemyPosition;
+                    double hypotetischerAbstand=attackPosition.distance(position)-(20-3*power)*(tick-1-starttick);
+                    if(hypotetischerAbstand<=roboterdurchmesser+20-3*power+8){
+                        relevantIndex[Relevant]=i;
+                        Relevant++;
+                    }
                 }
+            }double minWinkel=180;int minIndex=0;
+            for (int i = 0; i < Relevant; i++) {
+                if(position.angleFrom(enemyBullets[relevantIndex[i]].enemyPosition)-degree<minWinkel){
+                 minWinkel=position.angleFrom(enemyBullets[relevantIndex[i]].enemyPosition)-degree;
+                 minIndex=i;
+                }
+
             }
-            return null;
+            return enemyBullets[relevantIndex[minIndex]];
         }
     }
 }
