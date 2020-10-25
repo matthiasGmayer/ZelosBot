@@ -1,4 +1,4 @@
-package Markus;
+package mmm;
 public class FlyingBullets {
     static double battlefieldheight;
     static double battlefieldwidth;
@@ -22,9 +22,9 @@ public class FlyingBullets {
     }
     public void update(Point enemyPosition,double enemyheading,int tick){
         for (int i = 0; i < flyingBullets.length; i++) {
-           if (!flyingBullets[i].disabled&&flyingBullets[i].score(enemyPosition,enemyheading,tick)){
+            if (!flyingBullets[i].disabled&&flyingBullets[i].score(enemyPosition,enemyheading,tick)){
                 Scoring.damage(id,flyingBullets[i].tick,flyingBullets[i].damage);
-           }
+            }
         }
     }
     private class FlyingBullet{
@@ -42,12 +42,12 @@ public class FlyingBullets {
             this.cost=cost;
         }
         public boolean score(Point enemyposition,double enemyheading,int tick){
-            Point[] corners=Calc.getCorners(enemyheading,enemyposition);
+            Point[] corners= Markus.Calc.getCorners(enemyheading,enemyposition);
             boolean scored=false;
             Point pastPosition=startposition.add(Point.fromPolarCoordinates(heading,velo*(tick-this.tick)));
             Point nowPosition=pastPosition.add(Point.fromPolarCoordinates(heading,velo));
             for (int i = 0; i < 4; i++) {
-                scored|=Calc.isIntersecting(corners[i],corners[i%4],pastPosition,nowPosition);
+                scored|= Markus.Calc.isIntersecting(corners[i],corners[i%4],pastPosition,nowPosition);
             }
             boolean outOfField=false;
             outOfField=nowPosition.getX()<0;

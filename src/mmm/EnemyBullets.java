@@ -1,4 +1,4 @@
-package Markus;
+package mmm;
 
 public class EnemyBullets {
     public double battleFieldWidth;
@@ -6,9 +6,9 @@ public class EnemyBullets {
     public static EnemyBullet[] enemyBullets;
     public Point[] corners;
     public EnemyBullets(double battleFieldHeight,double battleFieldWidth){
-       this.battleFieldHeight=battleFieldHeight;
-       this.battleFieldWidth=battleFieldWidth;
-       setVariables();
+        this.battleFieldHeight=battleFieldHeight;
+        this.battleFieldWidth=battleFieldWidth;
+        setVariables();
     }
 
     private void setVariables() {
