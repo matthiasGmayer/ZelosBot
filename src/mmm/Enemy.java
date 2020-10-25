@@ -3,7 +3,10 @@ package mmm;
 public class Enemy {
     private double bearing, heading, velocity, distance;
     Point position, relativePosition;
-    public void update(ScannedRobotEvent e, Point position, double robotHeading){
+    public Enemy(ScannedRobotEvent e, Point position, double robotHeading){
+        update(e,position,robotHeading);
+    }
+    private void update(ScannedRobotEvent e, Point position, double robotHeading){
         bearing=e.getBearing();
         heading = e.getHeading();
         velocity = e.getVelocity();
