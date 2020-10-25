@@ -11,6 +11,14 @@ public class Calc {
             System.out.println(p[i]);
         }
     }
+    public static int maxBulletFlyTime(double bulletVelocity, Point enemyPosition){
+        double maxDistance=0;
+        for (int i = 0; i < 4; i++) {
+            maxDistance=Math.max(maxDistance,corners[i].distance(enemyPosition));
+        }
+        return (int)Math.ceil(maxDistance/bulletVelocity);
+    }
+
     public static boolean isIntersecting(double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3){
         if(y1==y0){
             if(x1==x0) return false;

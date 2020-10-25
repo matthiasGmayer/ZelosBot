@@ -1,14 +1,28 @@
 package mmm;
 public class FlyingBullets {
-    static double battlefieldheight;
-    static double battlefieldwidth;
-    static FlyingBullet[] flyingBullets;
+    double battleFieldHeight;
+    double battleFieldWidth;
+    public Point[] corners;
+    FlyingBullet[] flyingBullets;
     static int idcounter;
+    public double gunCoolingRate;
     public final int id;
-    public FlyingBullets(){
-        this.id=idcounter+1;
-        idcounter++;
+    public FlyingBullets(int id,double battlefieldheight,double battlefieldwidth,double gunCoolingRate){
+        this.battleFieldHeight=battlefieldheight;
+        this.battleFieldWidth=battlefieldwidth;
+        this.id=id;
+        this.gunCoolingRate=gunCoolingRate;
+        setVariables();
     }
+    public void setVariables() {
+        corners[0]=new Point(0,0);
+        corners[1]=new Point(battleFieldWidth,0);
+        corners[2]=new Point(0,battleFieldHeight);
+        corners[3]=new Point(battleFieldWidth,battleFieldHeight);
+        double maxBulletAmout=(Calc.maxBulletFlyTime(3,new Point(0,0))/gunCoolingRate);
+        flyingBullets=new FlyingBullet[(int)Math.ceil(maxBulletAmout)];
+    }
+
     public void update(double angle,double power,Point position,int startTick){
         Scoring.cost(id,startTick,power);
         for (int i = 0; i < flyingBullets.length; i++) {
