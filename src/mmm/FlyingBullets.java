@@ -16,7 +16,7 @@ public class FlyingBullets {
     }
     public void setVariables() {
         corners = Calc.getRectangle(battleFieldWidth,battleFieldHeight);
-        double maxBulletAmout=(Calc.maxBulletFlyTime(3,new Point(0,0))/gunCoolingRate);
+        double maxBulletAmout=(Calc.maxBulletFlyTime(3,new Point(0,0),corners)/gunCoolingRate);
         flyingBullets=new FlyingBullet[(int)Math.ceil(maxBulletAmout)];
     }
 
