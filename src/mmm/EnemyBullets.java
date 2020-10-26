@@ -60,7 +60,7 @@ public class EnemyBullets {
             this.starttick = starttick;
             this.ourPositon = ourPosition;
         }
-    }
+    } public boolean enemyShotBullet()
     public EnemyBullet shotByWhichBullet(Point position,double power,int tick,double degree,double velocity){
         int Relevant=0;
         int[] relevantIndex=new int[enemyBullets.length];
