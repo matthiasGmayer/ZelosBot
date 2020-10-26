@@ -11,10 +11,10 @@ public class Calc {
             System.out.println(p[i]);
         }
     }
-    public static int maxBulletFlyTime(double bulletVelocity, Point enemyPosition){
+    public static int maxBulletFlyTime(double bulletVelocity, Point enemyPosition,Point[] battleFieldCorners){
         double maxDistance=0;
         for (int i = 0; i < 4; i++) {
-            maxDistance=Math.max(maxDistance,corners[i].distance(enemyPosition));
+            maxDistance=Math.max(maxDistance,battleFieldCorners[i].distance(enemyPosition));
         }
         return (int)Math.ceil(maxDistance/bulletVelocity);
     }
