@@ -53,22 +53,15 @@ public class FlyingBullets {
             this.cost=cost;
         }
         public boolean score(Point enemyPosition,double enemyHeading,int tick){
-            System.out.println("score");
-            Point[] corners= Calc.getCorners(enemyHeading,enemyPosition);
-            boolean scored=false;
             Point pastPosition=startposition.add(Point.fromPolarCoordinates(heading,velo*(tick-this.tick)));
             Point nowPosition=pastPosition.add(Point.fromPolarCoordinates(heading,velo));
-            for (int i = 0; i < 4; i++) {
-                scored|= Calc.isIntersecting(corners[i],corners[i%4],pastPosition,nowPosition);
-            }
-            boolean outOfField=false;
-            outOfField=nowPosition.getX()<0;
+            boolean scored = Calc.hitEnemy(pastPosition,nowPosition,enemyPosition,enemyHeading);
+            boolean outOfField=nowPosition.getX()<0;
             outOfField|=nowPosition.getY()<0;
             outOfField|=nowPosition.getY()>battleFieldHeight;
             outOfField|=nowPosition.getX()>battleFieldWidth;
-            disabled=outOfField;
-            scored = nowPosition.distance(enemyPosition)<40;
-            if (scored)disabled=true;
+            disabled|=outOfField;
+            disabled|=scored;
             return scored;
         }
     }

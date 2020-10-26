@@ -6,7 +6,6 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 	Scan scan;
 	Shooting shooting;
 	Point position;
-	Enemy enemy = new Enemy();
 	public MyFirstBehavior(SimpleRobot  robot) {
 		super(robot);
 	}
@@ -30,7 +29,8 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		if(e==null){
 			scan.onNoScan();
 		}else{
-			enemy.update(e,position,getHeading());
+
+			var enemy = new Enemy(e,position,getHeading());
 			scan.onScan(enemy,tick);
 			shooting.onScan(enemy,tick);
 		}

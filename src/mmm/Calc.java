@@ -42,8 +42,7 @@ public class Calc {
             }else{
                 double m =a1/a2;
                 double l = (y2-y0+m*(y3-y2))/(y1-y0);
-                System.out.println(new Point(x0,y0).add(new Point(x1-x0,y1-y0).multiply(l)));
-                System.out.println(new Point(x2,y2).add(new Point(x3-x2,y3-y2).multiply(m)));
+//                System.out.println(new Point(x0,y0).add(new Point(x1-x0,y1-y0).multiply(l)).distance(new Point(x2,y2).add(new Point(x3-x2,y3-y2).multiply(m)))<Double.MAX_VALUE*100.);
                 return 0<=l&&l<=1&&0<=m&&m<=1;
             }
         }
@@ -72,6 +71,7 @@ public class Calc {
         }
         return p;
     }
+
     public static Point[] getRectangle(double width, double height){
         Point[] p = new Point[4];
         p[0]=new Point(0,0);
@@ -79,5 +79,18 @@ public class Calc {
         p[2]=new Point(width,height);
         p[3]=new Point(0,height);
         return p;
+    }
+    public static boolean isInEnemy(Point p, Point pos, double heading){
+        p=p.subtract(pos);
+        double angle = - heading + p.angleFrom(pos);
+        Point np = Point.fromPolarCoordinates(angle,p.length());
+        return Math.abs(np.getX())<18&&Math.abs(np.getY())<18;
+    }
+    public static boolean hitEnemy(Point a, Point b, Point pos, double heading){
+        var corners = getCorners(heading,pos);
+        for (int i = 0; i < 4; i++) {
+            if(Calc.isIntersecting(corners[i],corners[(i+1)%4],a,b))return true;
+        }
+        return isInEnemy(b,pos,heading);
     }
 }
