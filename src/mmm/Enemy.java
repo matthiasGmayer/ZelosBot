@@ -1,7 +1,7 @@
 package mmm;
 
 public class Enemy {
-    private double bearing, heading, velocity, distance, hitbyBulletSize, bulletHitSize, velocityWithWallHit;
+    private double bearing, heading, velocity, distance, hitbyBulletSize, bulletHitSize, velocityWithWallHit, energy;
     private boolean gotHitByBullet=false, bulletHit=false, crashedRobo=false, hitWall=false;
     Point position, relativePosition;
 
@@ -10,6 +10,7 @@ public class Enemy {
 
     }
     private void update(ScannedRobotEvent e, Point position, double robotHeading){
+        energy=e.getEnergy();
         bearing=e.getBearing();
         heading = e.getHeading();
         velocity = e.getVelocity();
@@ -61,6 +62,8 @@ public class Enemy {
     public double getVelocity() {
         return velocity;
     }
+
+    public double getEnergy(){return energy;}
 
     public Point getPosition() {
         return position;
