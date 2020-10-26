@@ -8,6 +8,7 @@ public class Tactics {
     ArrayList<Supplier<Pair<Double, Double>>> tactics = new ArrayList<>();
     ArrayList<FlyingBullets> flyingBullets = new ArrayList<>();
     ArrayList<Double> gunHeat = new ArrayList<>();
+    ArrayList<Pair<Pair<Double, Double>,Pair<Point,Integer>>> readyToFire = new ArrayList<>();
     private int size;
     private double battleFieldWidth,battleFieldHeight,gunCoolDown;
 
@@ -21,17 +22,26 @@ public class Tactics {
         tactics.add(function);
         flyingBullets.add(new FlyingBullets(size,battleFieldHeight,battleFieldWidth,gunCoolDown));
         this.gunHeat.add(gunHeat);
+        readyToFire.add(null);
         size++;
     }
     double getGunHeat(double firePower){
-        return 1+firePower/5;
+//        return 1+firePower/5;
+        return 3;
     }
     public void update(Point position, Point enemyPosition, double enemyHeading,int tick){
+
         for (int i = 0; i < size; i++) {
-            if(gunHeat.get(i)==0){
+            if(gunHeat.get(i)<=gunCoolDown){
                 var p = tactics.get(i).get();
-                flyingBullets.get(i).update(p.a,p.b,position,tick);
-                gunHeat.set(i, getGunHeat(p.b));
+                readyToFire.set(i,new Pair<>(p,new Pair<>(position,tick)));
+            }
+            if(readyToFire.get(i)!=null){
+                var p = readyToFire.get(i);
+                flyingBullets.get(i).update(p.a.a,p.a.b,p.b.a,p.b.b);
+                gunHeat.set(i, getGunHeat(p.a.b));
+                readyToFire.set(i,null);
+                System.out.println("GunShot");
             }
             gunHeat.set(i,Math.max(0, gunHeat.get(i)-gunCoolDown));
         }

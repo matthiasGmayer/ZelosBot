@@ -17,10 +17,12 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		scan.start();
 		shooting.start();
 	}
-	int tick;
+
+	int tick=-1;
 	@Override
 	void execute() {
 		tick++;
+		Scoring.tick(tick);
 		position = new Point(getX(),getY());
 		ScannedRobotEvent e = null;
 		for (var r : getScannedRobotEvents()) {

@@ -51,6 +51,7 @@ public class FlyingBullets {
             this.tick= startTick;
             this.damage=damage;
             this.cost=cost;
+            System.out.println("virtual Heading: "+heading);
         }
         public boolean score(Point enemyPosition,double enemyHeading,int tick){
             Point pastPosition=startposition.add(Point.fromPolarCoordinates(heading,velo*(tick-this.tick)));
