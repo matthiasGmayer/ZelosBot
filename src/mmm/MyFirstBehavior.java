@@ -17,6 +17,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		scan.start();
 		shooting.start();
 	}
+
 	int tick=-1;
 	@Override
 	void execute() {
@@ -25,6 +26,8 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		EnemyBullets enemyBullets=null;
 		if(tick==0) enemyBullets=new EnemyBullets(getGunCoolingRate(),getBattleFieldHeight(),getBattleFieldWidth());
 		Enemy enemy=new Enemy(null,null,0); boolean scanned=false;
+		Scoring.tick(tick);
+
 		position = new Point(getX(),getY());
 		ScannedRobotEvent e = null;
 		for (var r : getScannedRobotEvents()) {
