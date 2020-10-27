@@ -25,13 +25,13 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		Enemy pastEnemy=null;
 		EnemyBullets enemyBullets=null;
 		if(tick==0) enemyBullets=new EnemyBullets(getGunCoolingRate(),getBattleFieldHeight(),getBattleFieldWidth());
-		Enemy enemy=new Enemy(null,null,0); boolean scanned=false;
+		Enemy enemy=null; int scanned=0;
 		Scoring.tick(tick);
 
 		position = new Point(getX(),getY());
 		ScannedRobotEvent e = null;
 		for (var r : getScannedRobotEvents()) {
-			scanned=true;
+			scanned++;
 			e=r;
 		}
 		if(e==null){
@@ -48,14 +48,14 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			enemy.update(r);
 		}
 		for (var r: getHitRobotEvents()){
-			if (scanned) enemy.update(r);
+			if (scanned!=0) enemy.update(r);
 		}
 		for (var r: getBulletHitBulletEvents()){
 			Point catchedPoint=new Point(r.getBullet().getX(),r.getBullet().getY());
 
 			enemyBullets.shotByWhichBullet(catchedPoint,r.getHitBullet().getPower(),tick,r.getHitBullet().getHeading(),r.getHitBullet().getVelocity());
 		}
-		if(scanned&&enemyBullets.enemyShotBullet(enemy,pastEnemy.getEnergy())){
+		if(scanned>1&&enemyBullets.enemyShotBullet(enemy,pastEnemy.getEnergy())){
 			double bulletSize=enemyBullets.getEnemyShotBulletSize();
 			enemyBullets.addBullet(tick,20-3*bulletSize,bulletSize,enemy.position,getPoint(),getHeading(),getVelocity());
 		}

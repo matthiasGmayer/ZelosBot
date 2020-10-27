@@ -16,10 +16,11 @@ public class EnemyShooting {
         for (int i = 0; i < lastShoots.length; i++) {
             if(lastShoots[i]!=null){
                 shootCounter++;
-                lastShoots[i].
+               // lastShoots[i].
             }
 
         }
+        return null;
     }
     
     public class EnemyShoot{
