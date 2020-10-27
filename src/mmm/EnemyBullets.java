@@ -81,7 +81,7 @@ public class EnemyBullets {
         int Relevant=0;
         int[] relevantIndex=new int[enemyBullets.length];
         for (int i = 0; i < enemyBullets.length; i++) {
-            if(enemyBullets[i]!=null&&!enemyBullets[i].disabled){
+            if(enemyBullets[i]!=null&&!enemyBullets[i].disabled&&enemyBullets[i].power==power){
                 Point attackPosition=enemyBullets[i].enemyPosition;
                 double hypotetischerAbstand=Math.abs(attackPosition.distance(position)-(20-3*power)*(tick+1-enemyBullets[i].starttick));
                 if(hypotetischerAbstand<=roboterdurchmesser+20-3*power+velocity){

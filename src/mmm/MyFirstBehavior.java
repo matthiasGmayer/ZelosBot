@@ -47,6 +47,11 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		for (var r: getHitRobotEvents()){
 			if (scanned) enemy.update(r);
 		}
+		for (var r: getBulletHitBulletEvents()){
+			Point catchedPoint=new Point(r.getBullet().getX(),r.getBullet().getY());
+
+			enemyBullets.shotByWhichBullet(catchedPoint,r.getHitBullet().getPower(),tick,r.getHitBullet().getHeading(),r.getHitBullet().getVelocity());
+		}
 		if(scanned&&enemyBullets.enemyShotBullet(enemy,pastEnemy.getEnergy())){
 			double bulletSize=enemyBullets.getEnemyShotBulletSize();
 			enemyBullets.addBullet(tick,20-3*bulletSize,bulletSize,enemy.position,getPoint(),getHeading(),getVelocity());
