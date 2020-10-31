@@ -40,29 +40,29 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			enemy = new Enemy(e,position,getHeading());
 			scan.onScan(enemy,tick);
 			shooting.onScan(enemy,tick);
-		}
-		for (var r: getHitByBulletEvents()){
-			enemy.update(r);
-		}
-		for (var r: getBulletHitEvents()){
-			enemy.update(r);
-		}
-		for (var r: getHitRobotEvents()){
-			if (scanned!=0) enemy.update(r);
-		}
-		for (var r: getBulletHitBulletEvents()){
-			Point catchedPoint=new Point(r.getBullet().getX(),r.getBullet().getY());
+			for (var r: getHitByBulletEvents()){
+				enemy.update(r);
+			}
+			for (var r: getBulletHitEvents()){
+				enemy.update(r);
+			}
+			for (var r: getHitRobotEvents()){
+				if (scanned!=0) enemy.update(r);
+			}
+			for (var r: getBulletHitBulletEvents()){
+				Point catchedPoint=new Point(r.getBullet().getX(),r.getBullet().getY());
 
-			enemyBullets.shotByWhichBullet(catchedPoint,r.getHitBullet().getPower(),tick,r.getHitBullet().getHeading(),r.getHitBullet().getVelocity());
-		}
-		if(scanned>1&&enemyBullets.enemyShotBullet(enemy,pastEnemy.getEnergy())){
-			double bulletSize=enemyBullets.getEnemyShotBulletSize();
-			enemyBullets.addBullet(tick,20-3*bulletSize,bulletSize,enemy.position,getPoint(),getHeading(),getVelocity());
+				enemyBullets.shotByWhichBullet(catchedPoint,r.getHitBullet().getPower(),tick,r.getHitBullet().getHeading(),r.getHitBullet().getVelocity());
+			}
+			if(scanned>1&&enemyBullets.enemyShotBullet(enemy,pastEnemy.getEnergy())){
+				double bulletSize=enemyBullets.getEnemyShotBulletSize();
+				enemyBullets.addBullet(tick,20-3*bulletSize,bulletSize,enemy.position,getPoint(),getHeading(),getVelocity());
+			}pastEnemy=enemy;
 		}
 		for (var r: getHitByBulletEvents()){
 			EnemyBullets.EnemyBullet enemyBullet=enemyBullets.shotByWhichBullet(getPoint(),r.getPower(),tick,r.getBearing(),r.getVelocity());
 		}
-		pastEnemy=enemy;
+
 	}
 	public void turnGunTo(double angle){
 		turnGun(Utils.normalRelativeAngle(-getGunHeading()+angle));
