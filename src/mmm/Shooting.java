@@ -13,6 +13,8 @@ public class Shooting {
     Enemy enemy;
     List<Enemy> pastList = new LinkedList<>();
     int keepPast = 10;
+    double readyPower;
+    //We get scan of the previous Round !!!
     public void onScan(Enemy enemy, int tick) {
         this.enemy =enemy;
         pastList.add(0,enemy);
@@ -23,10 +25,14 @@ public class Shooting {
         double angle = best.b.a;
         double firePower = best.b.b;
         robot.turnGunTo(angle);
-        if(gunHeat<=0.1){
+
+        if(readyPower > 0){
             robot.fireBullet(firePower);
-            System.out.println("shotBullet");
-            System.out.println("Actual Heading: " + Utils.normalRelativeAngle(robot.getGunHeading()));
+            readyPower=0;
+//            System.out.println("Actual Heading: " + Utils.normalRelativeAngle(robot.getGunHeading()));
+        }
+        if(gunHeat==0){
+            readyPower=firePower;
         }
         for (var r : robot.getBulletHitEvents()){
             System.out.println("ActualHit: "+tick);
@@ -37,9 +43,9 @@ public class Shooting {
 //        for (int i = 0; i < 16; i++) {
 //        tactics.add(this::shootToEnemy,(double)i);
 //        }
-        tactics.add(() ->shootToEnemy(),0.);
+//        tactics.add(() ->shootToEnemy(),0.);
 //        tactics.add(()->shootAtAverage(10),0.);
-//        tactics.add(()->shootPredicted(0),0.);
+        tactics.add(()->shootPredicted(0),0.);
 
     }
     public Pair<Double,Double> shootToEnemy(){
