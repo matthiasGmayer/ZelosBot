@@ -5,7 +5,7 @@ public class EnemyBullets {
     public double battleFieldHeight;
     public static EnemyBullet[] enemyBullets;
     public Point[] corners=new Point[4];
-    public double roboterdurchmesser=Math.sqrt(2*Math.pow(17,2));
+    public double roboterdurchmesser=Math.sqrt(2*Math.pow(18,2));
     public double gunCoolingRate;
     public EnemyBullets(double gunCoolingRate,double battleFieldHeight,double battleFieldWidth){
         this.battleFieldHeight=battleFieldHeight;
@@ -61,12 +61,27 @@ public class EnemyBullets {
             this.ourPositon = ourPosition;
         }
     }
-//    public boolean enemyShotBullet()
+    double enemyShotBulletSize=0;
+    public double getEnemyShotBulletSize(){
+        return enemyShotBulletSize;         //nur aufrufen wenn enemyShotBullet gleich true
+    }
+    public boolean enemyShotBullet(Enemy enemy,double energyOfPastTick){
+        double energy=enemy.getEnergy();
+        if (enemy.crashedRobo()) energy-=0.6;
+        if (enemy.hitWall()) energy-=enemy.getVelocityWithWallHit()*0.5-2; //da man nicht sicher sein kann kann man verschiedene Varianten simulieren
+        if (enemy.gotHitByBullet()) energy-=enemy.getHitbyBulletSize()*4+Math.max (0, 2 * (enemy.getHitbyBulletSize() - 1));
+        if (enemy.bulletHit()) energy+=3*enemy.getBulletHitSize();
+        if (energy!=enemy.getEnergy()){
+            enemyShotBulletSize=energy-enemy.getEnergy();
+            return true;
+        }
+        return false;
+    }
     public EnemyBullet shotByWhichBullet(Point position,double power,int tick,double degree,double velocity){
         int Relevant=0;
         int[] relevantIndex=new int[enemyBullets.length];
         for (int i = 0; i < enemyBullets.length; i++) {
-            if(enemyBullets[i]!=null&&!enemyBullets[i].disabled){
+            if(enemyBullets[i]!=null&&!enemyBullets[i].disabled&&enemyBullets[i].power==power){
                 Point attackPosition=enemyBullets[i].enemyPosition;
                 double hypotetischerAbstand=Math.abs(attackPosition.distance(position)-(20-3*power)*(tick+1-enemyBullets[i].starttick));
                 if(hypotetischerAbstand<=roboterdurchmesser+20-3*power+velocity){

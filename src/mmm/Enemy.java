@@ -1,15 +1,17 @@
 package mmm;
 
 public class Enemy {
-    private double bearing, heading, velocity, distance, hitbyBulletSize, bulletHitSize, velocityWithWallHit;
+    private double bearing, heading, velocity, distance, hitbyBulletSize, bulletHitSize, velocityWithWallHit, energy;
     private boolean gotHitByBullet=false, bulletHit=false, crashedRobo=false, hitWall=false;
     Point position, relativePosition;
+    public static double battleFieldWidth=0,battleFieldHeight=0;//initialisieren!
 
     public Enemy(ScannedRobotEvent e, Point position, double robotHeading){
         update(e,position,robotHeading);
 
     }
     private void update(ScannedRobotEvent e, Point position, double robotHeading){
+        energy=e.getEnergy();
         bearing=e.getBearing();
         heading = e.getHeading();
         velocity = e.getVelocity();
@@ -62,6 +64,8 @@ public class Enemy {
         return velocity;
     }
 
+    public double getEnergy(){return energy;}
+
     public Point getPosition() {
         return position;
     }
@@ -69,5 +73,20 @@ public class Enemy {
     public Point getRelativePosition() {
         return relativePosition;
     }
+
+    public double getFutureWallHitVelocity(){
+        return velocityWithWallHit;
+    }
+    public boolean willHeHitWallInNextTick(){
+        double closestWallDist=Math.min(battleFieldWidth-position.getX(),position.getX());
+        closestWallDist=Math.min(closestWallDist,position.getY());
+        closestWallDist=Math.min(closestWallDist,battleFieldHeight-position.getY());
+        if(closestWallDist<=6&&velocity>2){
+            velocityWithWallHit=velocity-2;
+            return true;
+        }
+        return false;
+    }
+
 }
 
