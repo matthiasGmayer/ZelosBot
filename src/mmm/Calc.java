@@ -47,12 +47,14 @@ public class Calc {
             }
         }
     }
+    private static int width = 16;
+    private static int height = 18;
     //36x36
     private static Point[] corners = new Point[]{
-            new Point(-18,-18),
-            new Point(+18,-18),
-            new Point(+18,+18),
-            new Point(-18,+18)
+            new Point(-width,-height),
+            new Point(+width,-height),
+            new Point(+width,+height),
+            new Point(-width,+height)
     };
     static double[] angle;
     static double[] distance;
@@ -88,9 +90,9 @@ public class Calc {
     }
     public static boolean hitEnemy(Point a, Point b, Point pos, double heading){
         var corners = getCorners(heading,pos);
-        for (int i = 0; i < 4; i++) {
-            if(Calc.isIntersecting(corners[i],corners[(i+1)%4],a,b))return true;
-        }
+//        for (int i = 0; i < 4; i++) {
+//            if(Calc.isIntersecting(corners[i],corners[(i+1)%4],a,b))return true;
+//        }
         return isInEnemy(b,pos,heading);
     }
 }
