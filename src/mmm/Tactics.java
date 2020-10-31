@@ -28,6 +28,9 @@ public class Tactics {
     double getGunHeat(double firePower){
         return 1+firePower/5;
     }
+
+    public void update(Point position, Point enemyPosition, double enemyHeading,int tick){
+        for (int i = 0; i < size; i++) {
             if(readyToFire.get(i)!=null){
                 var p = readyToFire.get(i);
                 //tick - 1 because scan is of previous round, so we simulate the bullet of the previous round
@@ -36,8 +39,6 @@ public class Tactics {
                 readyToFire.set(i,null);
 //                System.out.println("VirtualGunShot");
             }
-    public void update(Point position, Point enemyPosition, double enemyHeading,int tick){
-        for (int i = 0; i < size; i++) {
             gunHeat.set(i,Math.max(0, gunHeat.get(i)-gunCoolDown));
             if(gunHeat.get(i)<=0){
                 var p = tactics.get(i).get();
