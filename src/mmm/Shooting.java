@@ -23,6 +23,7 @@ public class Shooting {
         double angle = best.b.a;
         double firePower = best.b.b;
         robot.turnGunTo(angle);
+
         if(gunHeat<=0.1){
             robot.fireBullet(firePower);
             System.out.println("shotBullet");
