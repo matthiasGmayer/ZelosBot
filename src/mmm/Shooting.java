@@ -19,7 +19,7 @@ public class Shooting {
         this.enemy =enemy;
         pastList.add(0,enemy);
         if(pastList.size()>keepPast)pastList.remove(pastList.size()-1);
-        tactics.update(robot.position,enemy.position,enemy.getHeading(),tick);
+        tactics.update(robot.position,pastList.size() ==1 ? enemy.position : pastList.get(1).position,enemy.getHeading(),tick);
         var best = tactics.getBest();
         double gunHeat = best.a;
         double angle = best.b.a;
@@ -37,19 +37,23 @@ public class Shooting {
         for (var r : robot.getBulletHitEvents()){
             System.out.println("ActualHit: "+tick);
         }
+        System.out.println(enemy.position);
     }
     public void start(){
         tactics = new Tactics(robot.getBattleFieldWidth(),robot.getBattleFieldHeight(),robot.getGunCoolingRate());
 //        for (int i = 0; i < 16; i++) {
 //        tactics.add(this::shootToEnemy,(double)i);
 //        }
-//        tactics.add(() ->shootToEnemy(),0.);
+        //tactics.add(() ->shootToEnemy(),0.);
 //        tactics.add(()->shootAtAverage(10),0.);
-        tactics.add(()->shootPredicted(0),0.);
-
+        tactics.add(()->shootPredictMarkus(10),0.);
+//        tactics.add(this::simpleShoot,0.);
+    }
+    public Pair<Double, Double> simpleShoot(){
+        return new Pair<>(0.,3.);
     }
     public Pair<Double,Double> shootToEnemy(){
-        return new Pair<Double, Double>(enemy.relativePosition.angle(),3.);
+        return new Pair<Double, Double>(enemy.relativePosition.angle(),1.);
     }
     public Pair<Double,Double> shootAtAverage(int usePast){
         Point p = new Point(0,0);
@@ -76,7 +80,7 @@ public class Shooting {
         List<Double> futureFirePower = new LinkedList<>();
         for (int i = 0; i < futurePredictions.size(); i++) {
             double d = Math.max(futurePredictions.get(i).distance(robot.position),1);
-            futureFirePower.add((20-d/(i+1))/3);
+            futureFirePower.add((20-d/(i))/3);
         }
         int i;
         for (i = 0; i < futurePredictions.size(); i++) {
@@ -92,6 +96,14 @@ public class Shooting {
         var futurePosition=futurePredictions.get(i);
         double angle = futurePosition.angleFrom(robot.position);
         return new Pair<>(angle,power);
+    }
+    public Point clampPoint(Point point){
+        double xkord=Math.min(point.getX(),robot.getBattleFieldWidth()-36);
+        xkord=Math.max(36,xkord);
+        double ykord=Math.min(point.getY(),robot.getBattleFieldHeight()-36);
+        ykord=Math.max(36,ykord);
+        point=new Point(xkord,ykord);
+        return point;
     }
     final int ticksIntoFuture=40;
     final int maxVel = 8;
@@ -140,5 +152,34 @@ public class Shooting {
         }
         futurePredictions.remove(0);
         return futurePredictions;
+    }
+
+    public Pair<Double,Double>shootPredictMarkus(int pastCount) {
+
+        double kugeldicke = 1;
+        double avvelo = 0;
+        double degree = 0;
+        int counts = Math.min(pastList.size() - 1, pastCount);
+        for (int i = 0; i < counts; i++) {
+            avvelo += pastList.get(i).getVelocity();
+            degree += pastList.get(i + 1).getHeading() - pastList.get(i).getHeading();
+        }
+        avvelo /= (Math.max(counts,1));
+        degree /= (Math.max(counts,1));
+        Point futurePoint = pastList.get(0).position;
+        double phi = pastList.get(0).getHeading();
+        double ankuft = pastList.get(0).getDistance() / (20 - 3 * kugeldicke);
+        int count = 0;
+
+        while ((int) ankuft > count) {
+            phi += degree;
+            futurePoint = futurePoint.add(Point.fromPolarCoordinates(Utils.normalRelativeAngle(phi), avvelo));
+            futurePoint=clampPoint(futurePoint);
+            if (futurePoint.distance(robot.position) > 200) kugeldicke = 1.0;
+            else kugeldicke = 3;
+            ankuft = futurePoint.distance(robot.position) / (20 - 3 * kugeldicke);
+            count++;
+        }
+        return new Pair<>(futurePoint.angleFrom(robot.position),1.0);
     }
 }

@@ -34,7 +34,7 @@ public class Tactics {
             if(readyToFire.get(i)!=null){
                 var p = readyToFire.get(i);
                 //tick - 1 because scan is of previous round, so we simulate the bullet of the previous round
-                flyingBullets.get(i).update(p.a.a,p.a.b,p.b.a,tick-2);
+                flyingBullets.get(i).update(p.a.a,p.a.b,p.b.a,tick);
                 gunHeat.set(i, getGunHeat(p.a.b));
                 readyToFire.set(i,null);
 //                System.out.println("VirtualGunShot");

@@ -84,9 +84,9 @@ public class Calc {
     }
     public static boolean isInEnemy(Point p, Point pos, double heading){
         p=p.subtract(pos);
-        double angle = - heading + p.angleFrom(pos);
-        Point np = Point.fromPolarCoordinates(angle,p.length());
-        return Math.abs(np.getX())<18&&Math.abs(np.getY())<18;
+//        double angle = - heading + p.angleFrom(pos);
+//        Point np = Point.fromPolarCoordinates(angle,p.length());
+        return Math.abs(p.getX())<=18&&Math.abs(p.getY())<=18;
     }
     public static boolean hitEnemy(Point a, Point b, Point pos, double heading){
         return isInEnemy(b,pos,0);

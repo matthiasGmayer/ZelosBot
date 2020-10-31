@@ -26,6 +26,7 @@ public class FlyingBullets {
             if(flyingBullets[i]==null||flyingBullets[i].disabled){
                 double velocity=20-3*power;
                 double damage=4*power+Math.max(0,2*(power-1));
+//                System.out.println("VirtualHeading: "+Utils.normalRelativeAngle(angle));
                 flyingBullets[i]=new FlyingBullet(power,velocity,angle,position,startTick,damage);
                 break;
             }
@@ -53,9 +54,10 @@ public class FlyingBullets {
             this.cost=cost;
         }
         public boolean score(Point enemyPosition,double enemyHeading,int tick){
-            Point pastPosition=startposition.add(Point.fromPolarCoordinates(heading,velo*(tick-this.tick)));
-            Point nowPosition=pastPosition.subtract(Point.fromPolarCoordinates(heading,velo));
-            boolean scored = Calc.hitEnemy(pastPosition,nowPosition,enemyPosition,enemyHeading);
+//            Point pastPosition=startposition.add(Point.fromPolarCoordinates(heading,velo*(tick-this.tick)));
+//            Point nowPosition=pastPosition.add(Point.fromPolarCoordinates(heading,velo));
+            Point nowPosition = startposition.add(Point.fromPolarCoordinates(heading,velo*(tick-this.tick)));
+            boolean scored = Calc.hitEnemy(null,nowPosition,enemyPosition,enemyHeading);
             boolean outOfField=nowPosition.getX()<0;
             outOfField|=nowPosition.getY()<0;
             outOfField|=nowPosition.getY()>battleFieldHeight;
