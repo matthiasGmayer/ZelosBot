@@ -87,7 +87,7 @@ public class Calc {
         return Math.abs(np.getX())<18&&Math.abs(np.getY())<18;
     }
     public static boolean hitEnemy(Point a, Point b, Point pos, double heading){
-        var corners = getCorners(heading,pos);
+        var corners = getCorners(0,pos);
         for (int i = 0; i < 4; i++) {
             if(Calc.isIntersecting(corners[i],corners[(i+1)%4],a,b))return true;
         }
