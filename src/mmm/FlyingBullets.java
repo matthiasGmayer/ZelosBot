@@ -51,11 +51,10 @@ public class FlyingBullets {
             this.tick= startTick;
             this.damage=damage;
             this.cost=cost;
-            System.out.println("virtual Heading: "+heading);
         }
         public boolean score(Point enemyPosition,double enemyHeading,int tick){
             Point pastPosition=startposition.add(Point.fromPolarCoordinates(heading,velo*(tick-this.tick)));
-            Point nowPosition=pastPosition.add(Point.fromPolarCoordinates(heading,velo));
+            Point nowPosition=pastPosition.subtract(Point.fromPolarCoordinates(heading,velo));
             boolean scored = Calc.hitEnemy(pastPosition,nowPosition,enemyPosition,enemyHeading);
             boolean outOfField=nowPosition.getX()<0;
             outOfField|=nowPosition.getY()<0;
