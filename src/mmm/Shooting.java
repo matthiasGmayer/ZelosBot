@@ -29,27 +29,28 @@ public class Shooting {
         pastList.add(0,enemy);
         if(pastList.size()>keepPast)pastList.remove(pastList.size()-1);
         tactics.update(robot.position,pastList.size() ==1 ? enemy.position : pastList.get(1).position,enemy.getHeading(),tick);
-//        var best = tactics.getBest();
-        var best = new Pair<>(0., shootPredictMarkus(10));
+        var best = tactics.getBest();
+//        var best = new Pair<>(0., shootPredictMarkus(10));
         double gunHeat = best.a;
 
         double angle = best.b.a;
         double firePower = best.b.b;
         robot.turnGunTo(angle);
-        readyPower=firePower;
+//        readyPower=firePower;
 
         if(readyPower > 0){
             robot.fireBullet(firePower);
             readyPower=0;
+//            System.out.println("AngleToBe: "+prevAngle + " Actual: " + robot.getGunHeading());
 //            System.out.println("Actual Heading: " + Utils.normalRelativeAngle(robot.getGunHeading()));
         }
         if(gunHeat==0){
             readyPower=firePower;
         }
-        for (var r : robot.getBulletHitEvents()){
-            System.out.println("ActualHit: "+tick);
-        }
-//        System.out.println(enemy.position);
+//        for (var r : robot.getBulletHitEvents()){
+//            System.out.println("ActualHit: "+tick);
+//        }
+//        System.out.println(robot.position);
     }
     public Pair<Double, Double> simpleShoot(){
         return new Pair<>(0.,3.);
@@ -164,18 +165,18 @@ public class Shooting {
         int counts = Math.min(pastList.size() - 1, pastCount);
         for (int i = 0; i < counts; i++) {
             avvelo += pastList.get(i).getVelocity();
-            degree += pastList.get(i + 1).getHeading() - pastList.get(i).getHeading();
+            degree += Utils.normalRelativeAngle(pastList.get(i).getHeading() - pastList.get(i+1).getHeading());
         }
         avvelo /= (Math.max(counts,1));
         degree /= (Math.max(counts,1));
         Point futurePoint = pastList.get(0).position;
-        double phi = pastList.get(0).getHeading();
+        double phi = Utils.normalRelativeAngle(pastList.get(0).getHeading());
         double ankuft = pastList.get(0).getDistance() / (20 - 3 * kugeldicke);
         int count = 0;
 
         while ((int) ankuft > count) {
-            phi += degree;
             futurePoint = futurePoint.add(Point.fromPolarCoordinates(Utils.normalRelativeAngle(phi), avvelo));
+            phi += degree;
             futurePoint=clampPoint(futurePoint);
             if (futurePoint.distance(robot.position) > 200) kugeldicke = 1.0;
             else kugeldicke = 3;
