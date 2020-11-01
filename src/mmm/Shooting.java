@@ -10,21 +10,33 @@ public class Shooting {
     public Shooting(MyFirstBehavior behavior){
         this.robot=behavior;
     }
+    public void start(){
+        tactics = new Tactics(robot.getBattleFieldWidth(),robot.getBattleFieldHeight(),robot.getGunCoolingRate());
+//        for (int i = 0; i < 16; i++) {
+//        tactics.add(this::shootToEnemy,(double)i);
+//        }
+        //tactics.add(() ->shootToEnemy(),0.);
+//        tactics.add(()->shootAtAverage(10),0.);
+        tactics.add(()->shootPredictMarkus(10),0.);
+//        tactics.add(this::simpleShoot,0.);
+    }
     Enemy enemy;
     List<Enemy> pastList = new LinkedList<>();
     int keepPast = 10;
     double readyPower;
-    //We get scan of the previous Round !!!
     public void onScan(Enemy enemy, int tick) {
         this.enemy =enemy;
         pastList.add(0,enemy);
         if(pastList.size()>keepPast)pastList.remove(pastList.size()-1);
         tactics.update(robot.position,pastList.size() ==1 ? enemy.position : pastList.get(1).position,enemy.getHeading(),tick);
-        var best = tactics.getBest();
+//        var best = tactics.getBest();
+        var best = new Pair<>(0., shootPredictMarkus(10));
         double gunHeat = best.a;
+
         double angle = best.b.a;
         double firePower = best.b.b;
         robot.turnGunTo(angle);
+        readyPower=firePower;
 
         if(readyPower > 0){
             robot.fireBullet(firePower);
@@ -37,17 +49,7 @@ public class Shooting {
         for (var r : robot.getBulletHitEvents()){
             System.out.println("ActualHit: "+tick);
         }
-        System.out.println(enemy.position);
-    }
-    public void start(){
-        tactics = new Tactics(robot.getBattleFieldWidth(),robot.getBattleFieldHeight(),robot.getGunCoolingRate());
-//        for (int i = 0; i < 16; i++) {
-//        tactics.add(this::shootToEnemy,(double)i);
-//        }
-        //tactics.add(() ->shootToEnemy(),0.);
-//        tactics.add(()->shootAtAverage(10),0.);
-        tactics.add(()->shootPredictMarkus(10),0.);
-//        tactics.add(this::simpleShoot,0.);
+//        System.out.println(enemy.position);
     }
     public Pair<Double, Double> simpleShoot(){
         return new Pair<>(0.,3.);
