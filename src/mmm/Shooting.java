@@ -12,14 +12,16 @@ public class Shooting {
     }
     public void start(){
         tactics = new Tactics(robot.getBattleFieldWidth(),robot.getBattleFieldHeight(),robot.getGunCoolingRate());
-//        for (int i = 0; i < 16; i++) {
-//        tactics.add(this::shootToEnemy,(double)i);
-//        }
-        //tactics.add(() ->shootToEnemy(),0.);
-//        tactics.add(()->shootAtAverage(10),0.);
-        tactics.add(()->shootPredicted(0),0.);
-//        tactics.add(()->shootPredictMarkus(10),0.);
-//        tactics.add(this::simpleShoot,0.);
+        for (int i = 1; i < 5; i++) {
+            final int finalI = i;
+            tactics.add(()->shootPredicted(5* finalI),0.);
+            tactics.add(()->shootPredictMarkus(5*finalI),0.);
+        }
+        for (int i = 0; i < 16; i++) {
+        tactics.add(this::shootToEnemy,(double)i);
+        }
+        tactics.add(()->shootAtAverage(10),0.);
+
     }
     Enemy enemy;
     List<Enemy> pastList = new LinkedList<>();
@@ -31,35 +33,21 @@ public class Shooting {
         if(pastList.size()>keepPast)pastList.remove(pastList.size()-1);
         tactics.update(robot.position,pastList.size() ==1 ? enemy.position : pastList.get(1).position,enemy.getHeading(),tick);
         var best = tactics.getBest();
-//        var best = new Pair<>(0., shootPredictMarkus(10));
         double gunHeat = best.a;
-
         double angle = best.b.a;
         double firePower = best.b.b;
         robot.turnGunTo(angle);
-//        readyPower=firePower;
-
         if(readyPower > 0){
-            System.out.println(tick);
             robot.fireBullet(firePower);
             readyPower=0;
-//            System.out.println("AngleToBe: "+prevAngle + " Actual: " + robot.getGunHeading());
-//            System.out.println("Actual Heading: " + Utils.normalRelativeAngle(robot.getGunHeading()));
         }
         if(gunHeat==0){
             readyPower=firePower;
         }
-//        for (var r : robot.getBulletHitEvents()){
-//            System.out.println("ActualHit: "+tick);
-//        }
-//        System.out.println(robot.position);
-        System.out.println(Scoring.getBestTactic());
-    }
-    public Pair<Double, Double> simpleShoot(){
-        return new Pair<>(0.,3.);
+        System.out.println("Current Tactic: "+Scoring.getBestTactic());
     }
     public Pair<Double,Double> shootToEnemy(){
-        return new Pair<Double, Double>(enemy.relativePosition.angle(),1.);
+        return new Pair<Double, Double>(enemy.relativePosition.angle(),3.);
     }
     public Pair<Double,Double> shootAtAverage(int usePast){
         Point p = new Point(0,0);
@@ -73,15 +61,14 @@ public class Shooting {
     }
     int maxDis=800;
     int minDis=200;
-    public Pair<Double,Double> shootPredicted(int forcePower){
-        List<Point> futurePredictions = getFuturesLin(5,false,false,pastList);
+    public Pair<Double,Double> shootPredicted(int usePast){
+        List<Point> futurePredictions = getFuturesLin(usePast,false,false,pastList);
         double targetPower = enemy.getDistance()-minDis;
         targetPower/=maxDis+minDis;
         targetPower= Math.max(0,Math.min(1,targetPower));
         targetPower=1-targetPower;
         targetPower *= 2.9;
         targetPower+=0.1;
-        if(forcePower>0)targetPower=forcePower;
         double power = 0.1;
         List<Double> futureFirePower = new LinkedList<>();
         for (int i = 0; i < futurePredictions.size(); i++) {
@@ -97,7 +84,6 @@ public class Shooting {
             i=0;
             System.out.println("NOT PREDICTED");
         }
-        if(forcePower>0)power=forcePower;
 
         var futurePosition=futurePredictions.get(i);
         double angle = futurePosition.angleFrom(robot.position);
@@ -186,7 +172,6 @@ public class Shooting {
             ankuft =-1+ futurePoint.distance(robot.position) / (20 - 3 * kugeldicke);
             count++;
         }
-        System.out.println(robot.tick+" "+count+" "+futurePoint);
         return new Pair<>(futurePoint.angleFrom(robot.position),1.0);
     }
 }
