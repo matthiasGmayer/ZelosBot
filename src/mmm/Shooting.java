@@ -17,7 +17,8 @@ public class Shooting {
 //        }
         //tactics.add(() ->shootToEnemy(),0.);
 //        tactics.add(()->shootAtAverage(10),0.);
-        tactics.add(()->shootPredictMarkus(10),0.);
+        tactics.add(()->shootPredicted(0),0.);
+//        tactics.add(()->shootPredictMarkus(10),0.);
 //        tactics.add(this::simpleShoot,0.);
     }
     Enemy enemy;
@@ -51,6 +52,7 @@ public class Shooting {
 //            System.out.println("ActualHit: "+tick);
 //        }
 //        System.out.println(robot.position);
+        System.out.println(Scoring.getBestTactic());
     }
     public Pair<Double, Double> simpleShoot(){
         return new Pair<>(0.,3.);
@@ -68,8 +70,8 @@ public class Shooting {
         Point f = p.multiply(1.0/size);
         return new Pair<>(f.angleFrom(robot.position),3.);
     }
-    int maxDis=400;
-    int minDis=100;
+    int maxDis=800;
+    int minDis=200;
     public Pair<Double,Double> shootPredicted(int forcePower){
         List<Point> futurePredictions = getFuturesLin(5,false,false,pastList);
         double targetPower = enemy.getDistance()-minDis;
@@ -83,7 +85,7 @@ public class Shooting {
         List<Double> futureFirePower = new LinkedList<>();
         for (int i = 0; i < futurePredictions.size(); i++) {
             double d = Math.max(futurePredictions.get(i).distance(robot.position),1);
-            futureFirePower.add((20-d/(i))/3);
+            futureFirePower.add((20-d/(i-1))/3);
         }
         int i;
         for (i = 0; i < futurePredictions.size(); i++) {
@@ -114,11 +116,11 @@ public class Shooting {
         List<Point> futurePredictions = new LinkedList<>();
         double[] velDif = new double[usePast];
         double[] turnDif = new double[usePast];
-        int lastIndex = Math.min(pastList.size()-1,usePast-1);
-        for (int i = lastIndex; i >1 ; i--) {
-            Enemy a = pastList.get(i), b= pastList.get(i-1);
-            velDif[lastIndex-i]= b.getVelocity()-a.getVelocity();
-            turnDif[lastIndex-i]= Utils.normalRelativeAngle(b.getHeading()-a.getHeading());
+        int lastIndex = Math.min(pastList.size()-2,usePast-1);
+        for (int i = 0; i < lastIndex ; i++) {
+            Enemy a = pastList.get(lastIndex-i), b= pastList.get(lastIndex-i+1);
+            velDif[i]= b.getVelocity()-a.getVelocity();
+            turnDif[i]= -Utils.normalRelativeAngle(b.getHeading()-a.getHeading());
         }
         double[] futureTurn = new double[ticksIntoFuture];
         double turn = pastList.get(0).getHeading();
