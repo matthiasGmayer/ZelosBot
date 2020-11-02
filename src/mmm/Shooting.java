@@ -40,6 +40,7 @@ public class Shooting {
 //        readyPower=firePower;
 
         if(readyPower > 0){
+            System.out.println(tick);
             robot.fireBullet(firePower);
             readyPower=0;
 //            System.out.println("AngleToBe: "+prevAngle + " Actual: " + robot.getGunHeading());
@@ -173,18 +174,19 @@ public class Shooting {
         degree /= (Math.max(counts,1));
         Point futurePoint = pastList.get(0).position;
         double phi = Utils.normalRelativeAngle(pastList.get(0).getHeading());
-        double ankuft = pastList.get(0).getDistance() / (20 - 3 * kugeldicke);
+        double ankuft =-1+ pastList.get(0).getDistance() / (20 - 3 * kugeldicke);
         int count = 0;
 
         while ((int) ankuft > count) {
-            futurePoint = futurePoint.add(Point.fromPolarCoordinates(Utils.normalRelativeAngle(phi), avvelo));
             phi += degree;
+            futurePoint = futurePoint.add(Point.fromPolarCoordinates(Utils.normalRelativeAngle(phi), avvelo));
             futurePoint=clampPoint(futurePoint);
             if (futurePoint.distance(robot.position) > 200) kugeldicke = 1.0;
             else kugeldicke = 3;
-            ankuft = futurePoint.distance(robot.position) / (20 - 3 * kugeldicke);
+            ankuft =-1+ futurePoint.distance(robot.position) / (20 - 3 * kugeldicke);
             count++;
         }
+        System.out.println(robot.tick+" "+count+" "+futurePoint);
         return new Pair<>(futurePoint.angleFrom(robot.position),1.0);
     }
 }
