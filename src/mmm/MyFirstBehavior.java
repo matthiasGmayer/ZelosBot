@@ -5,6 +5,7 @@ import java.util.*;
 public class MyFirstBehavior extends SimpleRobotBehavior {
 	Scan scan;
 	Shooting shooting;
+	Move move;
 	Point position;
 	public MyFirstBehavior(SimpleRobot  robot) {
 		super(robot);
@@ -14,6 +15,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		position = new Point(getX(),getY());
 		scan = new Scan(this);
 		shooting = new Shooting(this);
+		move = new Move(this);
 		scan.start();
 		shooting.start();
 	}
@@ -41,6 +43,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			enemy = new Enemy(e,position,getHeading());
 			scan.onScan(enemy,tick);
 			shooting.onScan(enemy,tick);
+//			move.onScan(enemy);
 			for (var r: getHitByBulletEvents()){
 				enemy.update(r);
 			}
@@ -53,7 +56,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			for (var r: getBulletHitBulletEvents()){
 				Point catchedPoint=new Point(r.getBullet().getX(),r.getBullet().getY());
 
-				enemyBullets.shotByWhichBullet(catchedPoint,r.getHitBullet().getPower(),tick,r.getHitBullet().getHeading(),r.getHitBullet().getVelocity());
+//				enemyBullets.shotByWhichBullet(catchedPoint,r.getHitBullet().getPower(),tick,r.getHitBullet().getHeading(),r.getHitBullet().getVelocity());
 			}
 			if(scanned>1&&enemyBullets.enemyShotBullet(enemy,pastEnemy.getEnergy())){
 				double bulletSize=enemyBullets.getEnemyShotBulletSize();
@@ -62,6 +65,9 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		}
 		for (var r: getHitByBulletEvents()){
 			EnemyBullets.EnemyBullet enemyBullet=enemyBullets.shotByWhichBullet(getPoint(),r.getPower(),tick,r.getBearing(),r.getVelocity());
+		}
+		for (var r: getHitWallEvents()){
+			move.onHitWall(r);
 		}
 
 	}

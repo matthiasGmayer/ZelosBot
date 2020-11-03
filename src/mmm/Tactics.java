@@ -18,7 +18,7 @@ public class Tactics {
         this.battleFieldWidth = battleFieldWidth;
         this.gunCoolDown = gunCoolDown;
     }
-    public void add(Supplier<Pair<Double,Double>> function,Double gunHeat){
+    public void add(Supplier<Pair<Double,Double>> function,double gunHeat){
         tactics.add(function);
         flyingBullets.add(new FlyingBullets(size,battleFieldHeight,battleFieldWidth,gunCoolDown));
         this.gunHeat.add(gunHeat);

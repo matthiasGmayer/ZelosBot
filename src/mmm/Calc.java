@@ -105,13 +105,16 @@ public class Calc {
         p[3]=new Point(0,height);
         return p;
     }
-    public static boolean isInEnemy(Point p, Point pos, double heading){
+    public static boolean isInEnemy(Point p, Point pos){
         p=p.subtract(pos);
-//        double angle = - heading + p.angleFrom(pos);
-//        Point np = Point.fromPolarCoordinates(angle,p.length());
         return Math.abs(p.getX())<=18&&Math.abs(p.getY())<=18;
     }
-    public static boolean hitEnemy(Point a, Point b, Point pos, double heading){
-        return isInEnemy(b,pos,0);
+    public static boolean hitEnemy(Point past, Point now, Point enemyPos){
+        if(isInEnemy(now,enemyPos)) return true;
+        boolean b=false;
+        for (int i = 0; i < corners.length; i++) {
+            b|=isIntersecting(past,now,corners[i],corners[(i+1)% corners.length]);
+        }
+        return b;
     }
 }
