@@ -47,7 +47,7 @@ public class Calc {
             }
         }
     }
-    private static int width = 16;
+    private static int width = 18;
     private static int height = 18;
     //36x36
     private static Point[] corners = new Point[]{
@@ -73,7 +73,30 @@ public class Calc {
         }
         return p;
     }
-
+    public static boolean isShootable(Point position,Point enemyPoint,double distance,double velocity){
+        boolean one=false,all=true;
+        enemyPoint=enemyPoint.subtract(position);
+        for (int i = 0; i < corners.length; i++) {
+            one|=cornerIsShootable(corners[i],enemyPoint,distance);
+            all&=cornerIsShootable(corners[i],enemyPoint,distance-velocity);
+        }
+        if(all) return false;
+        if(one) return true;
+        for (int i = 0; i < corners.length; i++) {
+            one|=edgeIsShootable(enemyPoint,corners[i],corners[(i+1)%4],distance);
+        }
+        return one;
+    }
+    public static boolean edgeIsShootable(Point enemyPosition,Point corner1,Point corner2,double distance){
+        if(Math.min(corner1.getX(),corner2.getX())<=enemyPosition.getX()&&Math.max(corner1.getX(),corner2.getX())>=enemyPosition.getX())
+            return Math.abs(corner1.getY()-enemyPosition.getY())<=distance;
+        if(Math.min(corner1.getY(),corner2.getY())<=enemyPosition.getY()&&Math.max(corner1.getY(),corner2.getY())>=enemyPosition.getY())
+            return Math.abs(corner1.getX()-enemyPosition.getX())<=distance;
+        return false;
+    }
+    public static boolean cornerIsShootable(Point corner,Point emenyPosition,double distance){
+        return corner.distance(emenyPosition)<=distance;
+    }
     public static Point[] getRectangle(double width, double height){
         Point[] p = new Point[4];
         p[0]=new Point(0,0);
