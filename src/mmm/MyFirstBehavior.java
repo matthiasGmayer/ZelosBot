@@ -42,7 +42,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			enemy = new Enemy(e,position,getHeading());
 			scan.onScan(enemy,tick);
 			shooting.onScan(enemy,tick);
-			move.onScan(enemy);
+//			move.onScan(enemy);
 			for (var r: getHitByBulletEvents()){
 				enemy.update(r);
 			}
