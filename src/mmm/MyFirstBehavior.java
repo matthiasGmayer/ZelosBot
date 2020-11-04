@@ -1,5 +1,6 @@
 package mmm;
 
+import java.awt.*;
 import java.util.*;
 
 public class MyFirstBehavior extends SimpleRobotBehavior {
@@ -12,6 +13,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 	}
 	@Override
 	public void start() {
+		setColors(Color.magenta,Color.CYAN,Color.red,Color.yellow,Color.BLACK);
 		position = new Point(getX(),getY());
 		scan = new Scan(this);
 		shooting = new Shooting(this);
@@ -43,7 +45,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			enemy = new Enemy(e,position,getHeading());
 			scan.onScan(enemy,tick);
 			shooting.onScan(enemy,tick);
-//			move.onScan(enemy);
+			move.onScan(enemy);
 			for (var r: getHitByBulletEvents()){
 				enemy.update(r);
 			}
