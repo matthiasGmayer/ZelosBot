@@ -26,6 +26,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 	@Override
 	void execute() {
 		tick++;
+		System.out.println(tick+" " +getEnergy());
 		Enemy pastEnemy=null;
 		EnemyBullets enemyBullets=null;
 		if(tick==0) enemyBullets=new EnemyBullets(getGunCoolingRate(),getBattleFieldHeight(),getBattleFieldWidth());
