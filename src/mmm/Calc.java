@@ -73,19 +73,23 @@ public class Calc {
         }
         return p;
     }
-    public static boolean isShootable(Point position,Point enemyPoint,double distance,double velocity){
-        boolean one=false,all=true;
+    public static boolean isShootable(Point position,Point enemyPoint,double distance,double predistance){
         enemyPoint=enemyPoint.subtract(position);
+        int preShootableEdges=0;
         for (int i = 0; i < corners.length; i++) {
-            one|=cornerIsShootable(corners[i],enemyPoint,distance);
-            all&=cornerIsShootable(corners[i],enemyPoint,distance-velocity);
+            if(cornerIsShootable(corners[i],enemyPoint,predistance)) preShootableEdges++;
         }
-        if(all) return false;
-        if(one) return true;
+        if (preShootableEdges>2)return false;
         for (int i = 0; i < corners.length; i++) {
-            one|=edgeIsShootable(enemyPoint,corners[i],corners[(i+1)%4],distance);
+            if (edgeIsShootable(enemyPoint,corners[i],corners[(i+1)%4],predistance)&&preShootableEdges==2) return false;
         }
-        return one;
+        for (int i = 0; i < corners.length; i++) {
+            if(cornerIsShootable(corners[i],enemyPoint,distance)) return true;
+        }
+        for (int i = 0; i < corners.length; i++) {
+            if(edgeIsShootable(enemyPoint,corners[i],corners[(i+1)%4],distance)) return true;
+        }
+        return false;
     }
     public static boolean edgeIsShootable(Point enemyPosition,Point corner1,Point corner2,double distance){
         if(Math.min(corner1.getX(),corner2.getX())<=enemyPosition.getX()&&Math.max(corner1.getX(),corner2.getX())>=enemyPosition.getX())
@@ -96,6 +100,14 @@ public class Calc {
     }
     public static boolean cornerIsShootable(Point corner,Point emenyPosition,double distance){
         return corner.distance(emenyPosition)<=distance;
+    }
+    public static boolean couldThisBulletHitUs(double distance,double degree,Point position,Point enemyPosition){
+        enemyPosition.subtract(position);
+        Point goalPoint=enemyPosition.add(Point.fromPolarCoordinates(degree,distance));
+        for (int i = 0; i < 4; i++) {
+            if(isIntersecting(enemyPosition,goalPoint,corners[i],corners[(i+1)%4])) return true;
+        }
+        return false;
     }
     public static Point[] getRectangle(double width, double height){
         Point[] p = new Point[4];

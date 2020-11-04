@@ -55,8 +55,7 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			}
 			for (var r: getBulletHitBulletEvents()){
 				Point catchedPoint=new Point(r.getBullet().getX(),r.getBullet().getY());
-
-//				enemyBullets.shotByWhichBullet(catchedPoint,r.getHitBullet().getPower(),tick,r.getHitBullet().getHeading(),r.getHitBullet().getVelocity());
+				System.out.println(catchedPoint);
 			}
 			if(scanned>1&&enemyBullets.enemyShotBullet(enemy,pastEnemy.getEnergy())){
 				double bulletSize=enemyBullets.getEnemyShotBulletSize();
@@ -64,7 +63,8 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			}pastEnemy=enemy;
 		}
 		for (var r: getHitByBulletEvents()){
-			EnemyBullets.EnemyBullet enemyBullet=enemyBullets.shotByWhichBullet(getPoint(),r.getPower(),tick,r.getBearing(),r.getVelocity());
+			EnemyBullets.EnemyBullet enemyBullet=enemyBullets.shotByWhichBullet(getPoint(),r.getPower(),tick,r.getBearing());
+			System.out.println(enemyBullet.starttick);
 		}
 		for (var r: getHitWallEvents()){
 			move.onHitWall(r);

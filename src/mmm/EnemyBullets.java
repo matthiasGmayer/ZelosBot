@@ -80,13 +80,15 @@ public class EnemyBullets {
         }
         return false;
     }
-    public EnemyBullet shotByWhichBullet(Point position,double power,int tick,double degree,double velocity){
+
+    public EnemyBullet shotByWhichBullet(Point preposition,double power,int tick,double degree){
         List<Integer> relevantIndex=new LinkedList<>();
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]!=null&&!enemyBullets[i].disabled){
                 Point attackPosition=enemyBullets[i].enemyPosition;
-                double distance=(20-3*power)*(tick-enemyBullets[i].starttick);
-                if(Calc.isShootable(position,attackPosition,distance,20-3*power)){ //wir erwarten geschwindigkeit der realen kugel nicht virtuel
+                double predistance=(20-3*power)*(tick-1-enemyBullets[i].starttick);
+                double distance=(20-3*power)+predistance;
+                if(Calc.isShootable(preposition,attackPosition,distance,predistance)){ //wir erwarten geschwindigkeit der realen kugel nicht virtuel
                     relevantIndex.add(i);
                 }
 //                double hypotetischerAbstand=Math.abs(attackPosition.distance(position)-(20-3*power)*(tick-enemyBullets[i].starttick));
@@ -94,16 +96,21 @@ public class EnemyBullets {
 //                    relevantIndex[Relevant]=i;
 //                }
             }
-        }double minWinkel=180;int minIndex=0;
+        }
+        double powerdif=3;int bestIndex=-1;
         for (int i:relevantIndex) {
-            if(position.angleFrom(enemyBullets[i].enemyPosition)-degree<minWinkel){
-                minWinkel=position.angleFrom(enemyBullets[i].enemyPosition)-degree;
-                minIndex=i;
+            Point attackPosition=enemyBullets[i].enemyPosition;
+            double distance=(20-3*power)*(tick-enemyBullets[i].starttick);
+            if(Calc.couldThisBulletHitUs(distance,degree,preposition,attackPosition)){
+                if(Math.abs(power-enemyBullets[i].power)<powerdif){
+                    bestIndex=i;
+                    powerdif=Math.abs(power-enemyBullets[i].power);
+                }
             }
 
         }
-        enemyBullets[minIndex].disabled=true;
-        return enemyBullets[minIndex];
+        enemyBullets[bestIndex].disabled=true;
+        return enemyBullets[bestIndex];
 
     }
 }
