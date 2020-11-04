@@ -12,16 +12,18 @@ public class Shooting {
     }
     public void start(){
         tactics = new Tactics(robot.getBattleFieldWidth(),robot.getBattleFieldHeight(),robot.getGunCoolingRate());
-//        for (int i = 1; i < 5; i++) {
-//            final int finalI = i;
-//            tactics.add(()->shootPredicted(5* finalI),0.);
-//            tactics.add(()->shootPredictMarkus(5*finalI),0.);
-//        }
-//        for (int i = 0; i < 16; i++) {
-//        tactics.add(this::shootToEnemy,(double)i);
-//        }
-//        tactics.add(()->shootAtAverage(10),0.);
-        tactics.add(this::shootUp,0.);
+        for (int gunHeat = 0; gunHeat < 15; gunHeat+=5) {
+            for (int i = 1; i < 3; i++) {
+                final int finalI = i;
+                tactics.add(() -> shootPredicted(5 * finalI), gunHeat);
+                tactics.add(() -> shootPredictMarkus(5 * finalI), gunHeat);
+                tactics.add(() -> shootAtAverage(5 * finalI), gunHeat);
+            }
+        }
+        for (int i = 0; i < 16; i++) {
+        tactics.add(this::shootToEnemy,i);
+        }
+//        tactics.add(this::shootUp,0.);
     }
     Enemy enemy;
     List<Enemy> pastList = new LinkedList<>();
@@ -40,14 +42,10 @@ public class Shooting {
         if(readyPower > 0){
             robot.fireBullet(firePower);
             readyPower=0;
-            System.out.println("Shoot " + tick);
-            System.out.println((int)((robot.getBattleFieldHeight()-robot.getY())/(20-3)));
         }
         if(gunHeat==0){
             readyPower=firePower;
         }
-        System.out.println(robot.getEnergy());
-//        System.out.println();
 //        System.out.println("Current Tactic: "+Scoring.getBestTactic());
     }
     public Pair<Double, Double> shootUp() {
