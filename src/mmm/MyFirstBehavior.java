@@ -21,18 +21,17 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 		scan.start();
 		shooting.start();
 	}
-
+	Enemy pastEnemy=null;
+	Point lastPoint=null;
+	EnemyBullets enemyBullets=null;
 	int tick=-1;
 	@Override
 	void execute() {
 		tick++;
-		System.out.println(tick+" " +getEnergy());
-		Enemy pastEnemy=null;
-		EnemyBullets enemyBullets=null;
 		if(tick==0) enemyBullets=new EnemyBullets(getGunCoolingRate(),getBattleFieldHeight(),getBattleFieldWidth());
 		Enemy enemy=null; int scanned=0;
 		Scoring.tick(tick);
-
+		System.out.println(tick+"tick");
 		position = new Point(getX(),getY());
 		ScannedRobotEvent e = null;
 		for (var r : getScannedRobotEvents()) {
@@ -48,6 +47,9 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 			move.onScan(enemy);
 			for (var r: getHitByBulletEvents()){
 				enemy.update(r);
+				System.out.println("hehel");
+				EnemyBullets.EnemyBullet enemyBullet=enemyBullets.shotByWhichBullet(lastPoint,r.getPower(),tick,r.getHeading());
+				System.out.println("kugel auf tick "+enemyBullet.starttick);
 			}
 			for (var r: getBulletHitEvents()){
 				enemy.update(r);
@@ -60,18 +62,15 @@ public class MyFirstBehavior extends SimpleRobotBehavior {
 				System.out.println(catchedPoint);
 			}
 			if(scanned>1&&enemyBullets.enemyShotBullet(enemy,pastEnemy.getEnergy())){
+				System.out.println("ADDDDD");
 				double bulletSize=enemyBullets.getEnemyShotBulletSize();
-				enemyBullets.addBullet(tick,20-3*bulletSize,bulletSize,enemy.position,getPoint(),getHeading(),getVelocity());
+				enemyBullets.addBullet(tick,20-3*bulletSize,bulletSize,enemy.position,lastPoint,getHeading(),getVelocity());//hier noch letzes heading adden
 			}pastEnemy=enemy;
-		}
-		for (var r: getHitByBulletEvents()){
-			EnemyBullets.EnemyBullet enemyBullet=enemyBullets.shotByWhichBullet(getPoint(),r.getPower(),tick,r.getBearing());
-			System.out.println(enemyBullet.starttick);
 		}
 		for (var r: getHitWallEvents()){
 			move.onHitWall(r);
 		}
-
+		lastPoint=getPoint();
 	}
 	public void turnGunTo(double angle){
 		turnGun(Utils.normalRelativeAngle(-getGunHeading()+angle));

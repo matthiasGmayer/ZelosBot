@@ -87,7 +87,7 @@ public class Shooting {
         }
         if(i==futurePredictions.size()){
             i=0;
-            System.out.println("NOT PREDICTED");
+//            System.out.println("NOT PREDICTED");
         }
 
         var futurePosition=futurePredictions.get(i);

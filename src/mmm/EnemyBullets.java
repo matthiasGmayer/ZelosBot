@@ -30,6 +30,7 @@ public class EnemyBullets {
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]==null||enemyBullets[i].disabled){
                 enemyBullets[i]=new EnemyBullet(starttick,bulletVelocity,power,enemyPosition,ourPosition,heading,ourVelocity);
+                System.out.println("SETI " + i);
                 break;
             }
         }
@@ -68,6 +69,7 @@ public class EnemyBullets {
     public double getEnemyShotBulletSize(){
         return enemyShotBulletSize;         //nur aufrufen wenn enemyShotBullet gleich true
     }
+    //TODO: WIRD NICHT RICHTIG AUFGERUFEN, GIBT IMMER FALSE ZURÜCK
     public boolean enemyShotBullet(Enemy enemy,double energyOfPastTick){
         double energy=energyOfPastTick;
         if (enemy.crashedRobo()) energy-=0.6;
@@ -83,13 +85,16 @@ public class EnemyBullets {
 
     public EnemyBullet shotByWhichBullet(Point preposition,double power,int tick,double degree){
         List<Integer> relevantIndex=new LinkedList<>();
+        int c=0;
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]!=null&&!enemyBullets[i].disabled){
+                System.out.println("HHHHHHH");
                 Point attackPosition=enemyBullets[i].enemyPosition;
                 double predistance=(20-3*power)*(tick-1-enemyBullets[i].starttick);
                 double distance=(20-3*power)+predistance;
                 if(Calc.isShootable(preposition,attackPosition,distance,predistance)){ //wir erwarten geschwindigkeit der realen kugel nicht virtuel
                     relevantIndex.add(i);
+                    c++;
                 }
 //                double hypotetischerAbstand=Math.abs(attackPosition.distance(position)-(20-3*power)*(tick-enemyBullets[i].starttick));
 //                if(hypotetischerAbstand<=roboterdurchmesser+20-3*power){
@@ -97,6 +102,7 @@ public class EnemyBullets {
 //                }
             }
         }
+        System.out.println("relevantlistlenght"+c);
         double powerdif=3;int bestIndex=-1;
         for (int i:relevantIndex) {
             Point attackPosition=enemyBullets[i].enemyPosition;
