@@ -30,7 +30,6 @@ public class EnemyBullets {
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]==null||enemyBullets[i].disabled){
                 enemyBullets[i]=new EnemyBullet(starttick,bulletVelocity,power,enemyPosition,ourPosition,heading,ourVelocity);
-                System.out.println("SETI " + i);
                 break;
             }
         }
@@ -71,13 +70,14 @@ public class EnemyBullets {
     }
     //TODO: WIRD NICHT RICHTIG AUFGERUFEN, GIBT IMMER FALSE ZURÜCK
     public boolean enemyShotBullet(Enemy enemy,double energyOfPastTick){
+        System.out.println(energyOfPastTick+" "+enemy.getEnergy());
         double energy=energyOfPastTick;
         if (enemy.crashedRobo()) energy-=0.6;
         if (enemy.hitWall()) energy-=enemy.getVelocityWithWallHit()*0.5-2; //da man nicht sicher sein kann kann man verschiedene Varianten simulieren
         if (enemy.gotHitByBullet()) energy-=enemy.getHitbyBulletSize()*4+Math.max (0, 2 * (enemy.getHitbyBulletSize() - 1));
         if (enemy.bulletHit()) energy+=3*enemy.getBulletHitSize();
         if (energy!=enemy.getEnergy()){
-            enemyShotBulletSize=Math.min(energy-enemy.getEnergy(),3);
+            enemyShotBulletSize=Math.max(0.1,Math.min(energy-enemy.getEnergy(),3));
             return true;
         }
         return false;
@@ -88,7 +88,6 @@ public class EnemyBullets {
         int c=0;
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]!=null&&!enemyBullets[i].disabled){
-                System.out.println("HHHHHHH");
                 Point attackPosition=enemyBullets[i].enemyPosition;
                 double predistance=(20-3*power)*(tick-1-enemyBullets[i].starttick);
                 double distance=(20-3*power)+predistance;
@@ -108,6 +107,7 @@ public class EnemyBullets {
             Point attackPosition=enemyBullets[i].enemyPosition;
             double distance=(20-3*power)*(tick-enemyBullets[i].starttick);
             if(Calc.couldThisBulletHitUs(distance,degree,preposition,attackPosition)){
+                System.out.println("hi ich lebe noch");
                 if(Math.abs(power-enemyBullets[i].power)<powerdif){
                     bestIndex=i;
                     powerdif=Math.abs(power-enemyBullets[i].power);

@@ -102,7 +102,7 @@ public class Calc {
         return corner.distance(emenyPosition)<=distance;
     }
     public static boolean couldThisBulletHitUs(double distance,double degree,Point position,Point enemyPosition){
-        enemyPosition.subtract(position);
+        enemyPosition=enemyPosition.subtract(position);
         Point goalPoint=enemyPosition.add(Point.fromPolarCoordinates(degree,distance));
         for (int i = 0; i < 4; i++) {
             if(isIntersecting(enemyPosition,goalPoint,corners[i],corners[(i+1)%4])) return true;
