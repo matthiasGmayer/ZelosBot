@@ -20,12 +20,12 @@ public class Enemy {
         this.position = position.add(relativePosition);
     }
     public void update(HitByBulletEvent hitByBulletEvent){
-        gotHitByBullet=true;
-        hitbyBulletSize=hitByBulletEvent.getPower();
+        bulletHit=true;
+        bulletHitSize=hitByBulletEvent.getPower();
     }
     public void update(BulletHitEvent bulletHitEvent){
-        bulletHit=true;
-        bulletHitSize=bulletHitEvent.getBullet().getPower();
+        gotHitByBullet =true;
+        hitbyBulletSize=bulletHitEvent.getBullet().getPower();
     }
     public void update(HitRobotEvent hitRobotEvent){ //nur ausführen nachdem ersten Scan, sonst wird noch kein Objekt der Klasse erstellt
         crashedRobo=true;

@@ -30,6 +30,7 @@ public class EnemyBullets {
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]==null||enemyBullets[i].disabled){
                 enemyBullets[i]=new EnemyBullet(starttick,bulletVelocity,power,enemyPosition,ourPosition,heading,ourVelocity);
+//                System.out.println("addet "+i);
                 break;
             }
         }
@@ -70,12 +71,12 @@ public class EnemyBullets {
     }
     //TODO: WIRD NICHT RICHTIG AUFGERUFEN, GIBT IMMER FALSE ZURÜCK
     public boolean enemyShotBullet(Enemy enemy,double energyOfPastTick){
-        System.out.println(energyOfPastTick+" "+enemy.getEnergy());
         double energy=energyOfPastTick;
-        if (enemy.crashedRobo()) energy-=0.6;
-        if (enemy.hitWall()) energy-=enemy.getVelocityWithWallHit()*0.5-2; //da man nicht sicher sein kann kann man verschiedene Varianten simulieren
-        if (enemy.gotHitByBullet()) energy-=enemy.getHitbyBulletSize()*4+Math.max (0, 2 * (enemy.getHitbyBulletSize() - 1));
-        if (enemy.bulletHit()) energy+=3*enemy.getBulletHitSize();
+        if (enemy.crashedRobo()) {energy-=0.6;}
+      //  if (enemy.hitWall()) energy-=enemy.getVelocityWithWallHit()*0.5-2; //da man nicht sicher sein kann kann man verschiedene Varianten simulieren
+        if (enemy.gotHitByBullet()){energy-=enemy.getHitbyBulletSize()*4+Math.max (0, 2 * (enemy.getHitbyBulletSize() - 1));}
+        if (enemy.bulletHit()){
+            energy+=3*enemy.getBulletHitSize();}
         if (energy!=enemy.getEnergy()){
             enemyShotBulletSize=Math.max(0.1,Math.min(energy-enemy.getEnergy(),3));
             return true;
@@ -83,40 +84,47 @@ public class EnemyBullets {
         return false;
     }
 
-    public EnemyBullet shotByWhichBullet(Point preposition,double power,int tick,double degree){
+    public EnemyBullet shotByWhichBullet(Point preposition,double power,int tick,double degree,Point postposition){
         List<Integer> relevantIndex=new LinkedList<>();
         int c=0;
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]!=null&&!enemyBullets[i].disabled){
+                System.out.println("i"+i);
+//                System.out.println("wir suchen");
                 Point attackPosition=enemyBullets[i].enemyPosition;
+                System.out.println(preposition.distance(attackPosition)+" angeblich dist"+(20-3*power)*(tick-enemyBullets[i].starttick));
                 double predistance=(20-3*power)*(tick-1-enemyBullets[i].starttick);
-                double distance=(20-3*power)+predistance;
+//                predistance=0;
+                double distance=(20-3*power)*(tick-enemyBullets[i].starttick);
                 if(Calc.isShootable(preposition,attackPosition,distance,predistance)){ //wir erwarten geschwindigkeit der realen kugel nicht virtuel
                     relevantIndex.add(i);
+//                    System.out.println("addet"+i);
                     c++;
                 }
-//                double hypotetischerAbstand=Math.abs(attackPosition.distance(position)-(20-3*power)*(tick-enemyBullets[i].starttick));
-//                if(hypotetischerAbstand<=roboterdurchmesser+20-3*power){
-//                    relevantIndex[Relevant]=i;
+//                else if(Calc.isShootable(postposition,attackPosition,distance,predistance)){ //wir erwarten geschwindigkeit der realen kugel nicht virtuel
+//                    relevantIndex.add(i);
+//                    System.out.println("addet"+i);
+//                    c++;
 //                }
             }
         }
         System.out.println("relevantlistlenght"+c);
-        double powerdif=3;int bestIndex=-1;
-        for (int i:relevantIndex) {
-            Point attackPosition=enemyBullets[i].enemyPosition;
-            double distance=(20-3*power)*(tick-enemyBullets[i].starttick);
-            if(Calc.couldThisBulletHitUs(distance,degree,preposition,attackPosition)){
-                System.out.println("hi ich lebe noch");
-                if(Math.abs(power-enemyBullets[i].power)<powerdif){
-                    bestIndex=i;
-                    powerdif=Math.abs(power-enemyBullets[i].power);
-                }
-            }
-
-        }
-        enemyBullets[bestIndex].disabled=true;
-        return enemyBullets[bestIndex];
+        return enemyBullets[relevantIndex.get(0)];
+//        double powerdif=3;int bestIndex=-1;
+//        for (int i:relevantIndex) {
+//            Point attackPosition=enemyBullets[i].enemyPosition;
+//            double distance=(20-3*power)*(tick-enemyBullets[i].starttick);
+//            if(Calc.couldThisBulletHitUs(distance,degree,preposition,attackPosition)){
+//                System.out.println("hi ich lebe noch");
+//                if(Math.abs(power-enemyBullets[i].power)<powerdif){
+//                    bestIndex=i;
+//                    powerdif=Math.abs(power-enemyBullets[i].power);
+//                }
+//            }
+//
+//        }
+//        enemyBullets[bestIndex].disabled=true;
+//        return enemyBullets[bestIndex];
 
     }
 }
