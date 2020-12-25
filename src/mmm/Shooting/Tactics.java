@@ -37,13 +37,13 @@ public class Tactics {
                 flyingBullets.get(i).update(p.a.a,p.a.b,p.b.a,tick);
                 gunHeat.set(i, getGunHeat(p.a.b));
                 readyToFire.set(i,null);
-//                System.out.println("VirtualGunShot");
+//                Debug.println("VirtualGunShot");
             }
             gunHeat.set(i,Math.max(0, gunHeat.get(i)-gunCoolDown));
             if(gunHeat.get(i)<=0){
                 var p = tactics.get(i).get();
                 readyToFire.set(i,new Pair<>(p,new Pair<>(position,tick)));
-//                System.out.println("VirtualPrepareToFire");
+//                Debug.println("VirtualPrepareToFire");
             }
         }
 

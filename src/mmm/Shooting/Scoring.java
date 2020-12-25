@@ -34,7 +34,7 @@ public class Scoring {
         int i =(tick+startTick)%keepTicks;
         Scoring.damage.get(tactic)[i]=damage;
         scores.set(tactic, scores.get(tactic)+damage);
-//        System.out.println("HypoHit: "+Scoring.tick);
+//        Debug.println("HypoHit: "+Scoring.tick);
     }
     public static void cost(int tactic, int tick, double cost){
         checkSize(tactic);
@@ -62,7 +62,7 @@ public class Scoring {
 //        for (int i = 0; i < scores.size()-1; i++) {
 //            System.out.print(scores.get(i) + " | ");
 //        }
-//        System.out.println(scores.get(scores.size()-1));
+//        Debug.println(scores.get(scores.size()-1));
         return best;
     }
 }

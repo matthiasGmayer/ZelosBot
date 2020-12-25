@@ -8,7 +8,9 @@ public class Move {
     double orbitDistance =300;
     double reverse = 1;
     void onScan(Enemy enemy){
-            double dif = orbitDistance - enemy.getDistance();
+        // This is a attack on this code:
+        robot.turn(200);
+        double dif = orbitDistance - enemy.getDistance();
             double angle = Math.min(25, Math.max(dif * 2,-25));
             robot.turn(90 + reverse * angle + enemy.getBearing());
             if (Math.random() < 0.1) reverse *= -1;

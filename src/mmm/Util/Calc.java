@@ -30,8 +30,8 @@ public class Calc {
                 else {
                     double l1= (y2-y0)/(y1-y0);
                     double l2= (y2-y0+y3-y2);
-//                    System.out.println(l1);
-//                    System.out.println(l2);
+//                    Debug.println(l1);
+//                    Debug.println(l2);
                     if((y3-y2)/(y1-y0)<0){
                         return l2<=1&&l1>=0;
                     }else{
@@ -41,7 +41,7 @@ public class Calc {
             }else{
                 double m =a1/a2;
                 double l = (y2-y0+m*(y3-y2))/(y1-y0);
-//                System.out.println(new Point(x0,y0).add(new Point(x1-x0,y1-y0).multiply(l)).distance(new Point(x2,y2).add(new Point(x3-x2,y3-y2).multiply(m)))<Double.MAX_VALUE*100.);
+//                Debug.println(new Point(x0,y0).add(new Point(x1-x0,y1-y0).multiply(l)).distance(new Point(x2,y2).add(new Point(x3-x2,y3-y2).multiply(m)))<Double.MAX_VALUE*100.);
                 return 0<=l&&l<=1&&0<=m&&m<=1;
             }
         }
@@ -78,9 +78,9 @@ public class Calc {
         for (int i = 0; i < corners.length; i++) {
             if(cornerIsShootable(corners[i],enemyPoint,predistance)) preShootableCorners++;
         }
-        System.out.println("PreEdges "+preShootableCorners);
+//        Debug.println("PreEdges "+preShootableCorners);
 
-        if (preShootableCorners>2){
+        if (preShootableCorners>3){
             return false;
 
         }
@@ -93,21 +93,21 @@ public class Calc {
         for (int i = 0; i < corners.length; i++) {
             if(cornerIsShootable(corners[i],enemyPoint,distance)) return true;
         }
-//        System.out.println(enemyPoint + " dis:" + distance);
+//        Debug.println(enemyPoint + " dis:" + distance);
         for (int i = 0; i < corners.length; i++) {
             if(edgeIsShootable(enemyPoint,corners[i],corners[(i+1)%4],distance)) return true;
         }
-        System.out.println("fehler2");
+        Debug.println("fehler2");
         return false;
     }
     public static boolean edgeIsShootable(Point enemyPosition,Point corner1,Point corner2,double distance){
         if(Math.min(corner1.getX(),corner2.getX())<=enemyPosition.getX()&&Math.max(corner1.getX(),corner2.getX())>=enemyPosition.getX()){
-            System.out.println("luu"+Math.abs(corner1.getY()-enemyPosition.getY()));
+            Debug.println("luu"+Math.abs(corner1.getY()-enemyPosition.getY()));
             return Math.abs(corner1.getY()-enemyPosition.getY())<=distance;
         }
 
         if(Math.min(corner1.getY(),corner2.getY())<=enemyPosition.getY()&&Math.max(corner1.getY(),corner2.getY())>=enemyPosition.getY()){
-            System.out.println("lu2u"+Math.abs(corner1.getX()-enemyPosition.getX()));
+            Debug.println("lu2u"+Math.abs(corner1.getX()-enemyPosition.getX()));
             return Math.abs(corner1.getX()-enemyPosition.getX())<=distance;
         }
 
@@ -118,9 +118,9 @@ public class Calc {
     }
     public static boolean couldThisBulletHitUs(double distance,double degree,Point position,Point enemyPosition){
         enemyPosition=enemyPosition.subtract(position);
-//        System.out.println(enemyPosition + "e pos");
+//        Debug.println(enemyPosition + "e pos");
         Point goalPoint=enemyPosition.add(Point.fromPolarCoordinates(degree,distance));
-//        System.out.println(goalPoint + "g pos");
+//        Debug.println(goalPoint + "g pos");
         for (int i = 0; i < 4; i++) {
             if(isIntersecting(enemyPosition,goalPoint,corners[i],corners[(i+1)%4])) return true;
         }

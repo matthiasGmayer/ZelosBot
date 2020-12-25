@@ -3,8 +3,8 @@ package mmm;
 import java.util.Objects;
 
 public class Pair<E,V> {
-    E a;
-    V b;
+    public E a;
+    public V b;
 
     public Pair(E e, V v) {
         a=e;

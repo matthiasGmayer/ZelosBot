@@ -1,5 +1,7 @@
 package mmm;
 
+import mmm.Util.Point;
+
 public class EnemyShooting {
     public EnemyShoot[] lastShoots;
     int pointer=0;

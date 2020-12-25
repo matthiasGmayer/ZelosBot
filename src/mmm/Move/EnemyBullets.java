@@ -1,5 +1,9 @@
 package mmm;
 
+import mmm.Util.Calc;
+import mmm.Util.Point;
+import mmm.Util.Utils;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,7 +34,7 @@ public class EnemyBullets {
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]==null||enemyBullets[i].disabled){
                 enemyBullets[i]=new EnemyBullet(starttick,bulletVelocity,power,enemyPosition,ourPosition,heading,ourVelocity);
-//                System.out.println("addet "+i);
+//                Debug.println("addet "+i);
                 break;
             }
         }
@@ -73,7 +77,7 @@ public class EnemyBullets {
     public boolean enemyShotBullet(Enemy enemy,double energyOfPastTick){
         double energy=energyOfPastTick;
         if (enemy.crashedRobo()) {energy-=0.6;}
-      //  if (enemy.hitWall()) energy-=enemy.getVelocityWithWallHit()*0.5-2; //da man nicht sicher sein kann kann man verschiedene Varianten simulieren
+//        if (enemy.hitWall()) energy-=enemy.getVelocityWithWallHit()*0.5-2; //da man nicht sicher sein kann kann man verschiedene Varianten simulieren
         if (enemy.gotHitByBullet()){energy-=enemy.getHitbyBulletSize()*4+Math.max (0, 2 * (enemy.getHitbyBulletSize() - 1));}
         if (enemy.bulletHit()){
             energy+=3*enemy.getBulletHitSize();}
@@ -81,42 +85,68 @@ public class EnemyBullets {
             enemyShotBulletSize=Math.max(0.1,Math.min(energy-enemy.getEnergy(),3));
             return true;
         }
+        //  if (enemy.hitWall()) energy-=enemy.getVelocityWithWallHit()*0.5-2; //da man nicht sicher sein kann kann man verschiedene Varianten simulieren
         return false;
     }
 
-    public EnemyBullet shotByWhichBullet(Point preposition,double power,int tick,double degree,Point postposition){
+    public EnemyBullet shotByWhichBullet(Point preposition,double power,int tick,double degree,Point postposition,Point bulletPoint){
         List<Integer> relevantIndex=new LinkedList<>();
         int c=0;
+        System.out.println("degree"+ Utils.normalRelativeAngle(degree+180));
+        for (int i = 0; i < 50; i++) {
+            System.out.println(bulletPoint.add(Point.fromPolarCoordinates(Utils.normalRelativeAngle(degree+180),i*(20-3*power))));
+        }
         for (int i = 0; i < enemyBullets.length; i++) {
             if(enemyBullets[i]!=null&&!enemyBullets[i].disabled){
-                System.out.println("i"+i);
-//                System.out.println("wir suchen");
-                Point attackPosition=enemyBullets[i].enemyPosition;
-                System.out.println(preposition.distance(attackPosition)+" angeblich dist"+(20-3*power)*(tick-enemyBullets[i].starttick));
-                double predistance=(20-3*power)*(tick-1-enemyBullets[i].starttick);
+                Point hypoPosition=enemyBullets[i].enemyPosition.add(Point.fromPolarCoordinates(Utils.normalRelativeAngle(degree),(20-3*power)*(tick-enemyBullets[i].starttick)));
+                System.out.println(i +" ab end" + hypoPosition.distance(bulletPoint) );
+                System.out.println("hypopos "+hypoPosition);
+                System.out.println("tickss "+(tick-enemyBullets[i].starttick));
+                System.out.println(enemyBullets[i].enemyPosition);
+                if (hypoPosition.distance(bulletPoint)<0.01){
+//                    return enemyBullets[i];
+                    System.out.println("jjjjj0,4)");
+                    relevantIndex.add(i);
+                }
+//                Debug.println("wir suchen");
+            //    double predistance=(20-3*power)*(tick-1-enemyBullets[i].starttick);
 //                predistance=0;
                 double distance=(20-3*power)*(tick-enemyBullets[i].starttick);
-                if(Calc.isShootable(preposition,attackPosition,distance,predistance)){ //wir erwarten geschwindigkeit der realen kugel nicht virtuel
-                    relevantIndex.add(i);
-//                    System.out.println("addet"+i);
+      //          if(Calc.isShootable(preposition,attackPosition,distance,predistance)){ //wir erwarten geschwindigkeit der realen kugel nicht virtuel
+ //                   relevantIndex.add(i);
+//                    Debug.println("addet"+i);
                     c++;
-                }
+
 //                else if(Calc.isShootable(postposition,attackPosition,distance,predistance)){ //wir erwarten geschwindigkeit der realen kugel nicht virtuel
 //                    relevantIndex.add(i);
-//                    System.out.println("addet"+i);
+//                    Debug.println("addet"+i);
 //                    c++;
 //                }
             }
         }
-        System.out.println("relevantlistlenght"+c);
+//        int closestindex=0;
+//        double sizediff=Math.abs(enemyBullets[relevantIndex.get(0)].power-power);
+//        for (int i = 1; i < relevantIndex.size(); i++) {
+//            if (Math.abs(enemyBullets[relevantIndex.get(i)].power-power)<sizediff){
+//                closestindex=i;
+//                sizediff=Math.abs(enemyBullets[relevantIndex.get(i)].power-power);
+//            }
+//        }
+        enemyBullets[relevantIndex.get(0)].power=power;
         return enemyBullets[relevantIndex.get(0)];
-//        double powerdif=3;int bestIndex=-1;
+//        Debug.println("relevantlistlenght"+c);
+////        return enemyBullets[relevantIndex.get(0)];
+//        int counk= 0;
+//        double powerdif=3;
+//        int bestIndex=-1;
 //        for (int i:relevantIndex) {
 //            Point attackPosition=enemyBullets[i].enemyPosition;
 //            double distance=(20-3*power)*(tick-enemyBullets[i].starttick);
 //            if(Calc.couldThisBulletHitUs(distance,degree,preposition,attackPosition)){
-//                System.out.println("hi ich lebe noch");
+//                if(powerdif==Math.abs(power-enemyBullets[i].power))
+//                    Debug.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",10);
 //                if(Math.abs(power-enemyBullets[i].power)<powerdif){
+//                    counk++;
 //                    bestIndex=i;
 //                    powerdif=Math.abs(power-enemyBullets[i].power);
 //                }

@@ -1,4 +1,8 @@
 package mmm;
+
+import mmm.Shooting.Scoring;
+import mmm.Util.Calc;
+
 public class FlyingBullets {
     double battleFieldHeight;
     double battleFieldWidth;
@@ -26,7 +30,7 @@ public class FlyingBullets {
             if(flyingBullets[i]==null||flyingBullets[i].disabled){
                 double velocity=20-3*power;
                 double damage=4*power+Math.max(0,2*(power-1));
-//                System.out.println("VirtualHeading: "+Utils.normalRelativeAngle(angle));
+//                Debug.println("VirtualHeading: "+Utils.normalRelativeAngle(angle));
                 flyingBullets[i]=new FlyingBullet(power,velocity,angle,position,startTick,damage);
                 break;
             }

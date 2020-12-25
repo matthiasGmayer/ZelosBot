@@ -46,7 +46,7 @@ public class Shooting {
         if(gunHeat==0){
             readyPower=firePower;
         }
-//        System.out.println("Current Tactic: "+Scoring.getBestTactic());
+//        Debug.println("Current Tactic: "+Scoring.getBestTactic());
     }
     public Pair<Double, Double> shootUp() {
         return new Pair<>(45.,1.);
@@ -87,7 +87,7 @@ public class Shooting {
         }
         if(i==futurePredictions.size()){
             i=0;
-//            System.out.println("NOT PREDICTED");
+//            Debug.println("NOT PREDICTED");
         }
 
         var futurePosition=futurePredictions.get(i);
